@@ -1,0 +1,59 @@
+
+:root {
+    --dark: #3d3d3d;
+    --light: #dbdfd3;
+    --on-hover: #ff7f00;
+  }
+  * {
+    margin: 0;
+    padding: 0;
+    font-family: 'Wix Madefor Text', sans-serif;
+  }
+  .soc-media-bar {
+    background-color: var(--dark);
+    color: white;
+  }
+  .soc-media-logo {
+    fill: white;
+    transition: 0.3s;
+  }
+  .soc-media-logo:hover {
+    fill: var(--on-hover);
+  }
+  .invisible {
+    visibility: hidden !important;
+  }
+  .logo-banner {
+    background-color: var(--light);
+  }
+  .hamburger-nav {
+    display: none !important;
+  }
+  .nav-item, .hamburger-nav-item  {
+    color: var(--dark);
+    padding: 6px 0 4px ;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.2rem;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  .hamburger-nav-item {
+    font-size: 1rem !important;
+    
+  }
+  .nav-item:hover {
+    color: var(--on-hover);
+  }
+  /* ====================================== */
+  @media screen and (max-width: 576px) {
+    .header-main-nav {
+      visibility: collapse !important; 
+    }
+    .hamburger-nav {
+      display: block !important;
+    }
+  
+  }
+  
+  

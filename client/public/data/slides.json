@@ -1,0 +1,20 @@
+{
+       "1": {
+            "title": "TAPK SAVO GYVENIMO LYDERE!",
+            "description": "ĮGYK 100% AIŠKUMO, ENERGIJOS VEIKTI IR SIEKTI ASMENINIŲ TIKSLŲ PRISIJUNGDAMA PRIE ŠIO 3 MĖNĖSIŲ ASMENINĖS LYDERYSTĖS KURSO.",
+            "image": "./images/banner.jpg",
+            "navigate": "/home" 
+        },
+       "2": {
+            "title": "ĮVEIK SAVO BAIMES!",
+            "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Iure voluptatem corrupti animi ipsa ipsum quidem labore architecto illo explicabo, omnis veritatis quis ea neque, soluta temporibus. Vel cumque voluptatum nemo.",
+            "image": "./images/banner2.jpg",
+            "navigate": "/home" 
+        },
+        "3": {
+            "title": "MYLĖK SAVE",
+            "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Iure voluptatem corrupti animi ipsa ipsum quidem labore architecto illo explicabo, omnis veritatis quis ea neque, soluta temporibus. Vel cumque voluptatum nemo.",
+            "image": "./images/banner3.jpg",
+            "navigate": "/home" 
+        }
+}
