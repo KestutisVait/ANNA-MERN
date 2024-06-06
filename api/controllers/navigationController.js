@@ -13,7 +13,6 @@ module.exports = {
         } catch (error) {
             res.json({ message: error });
         }
-
     },
     create: async (req, res) => {
         const { title, link, order_no } = req.body;
