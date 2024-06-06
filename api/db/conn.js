@@ -15,7 +15,7 @@ const dbUrl = dbUrl_template
 
 const DbConnection = () => {
     console.log(dbUrl);
-    mongoose.connect(dbUrl)
+    mongoose.connect(dbUrl, {serverSelectionTimeoutMS: 30000})
       .then(() => console.log('Connected to MongoDB'))
       .catch((error) => console.error('MongoDB connection error:', error));
 };
