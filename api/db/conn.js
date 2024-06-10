@@ -1,14 +1,14 @@
 const mongoose = require('mongoose');
 require('dotenv').config();
 
-const dbUrl = 'mongodb://localhost:27017/anna';
+// const dbUrl = 'mongodb://localhost:27017/anna';
 
-// const dbUrl_template = process.env.DB_URL;
-// const dbUrl = dbUrl_template
-//   .replace('<username>', process.env.DB_USERNAME)
-//   .replace('<password>', process.env.DB_PASSWORD)
-//   .replace('<host>', process.env.DB_HOST)
-//   .replace('<db_name>', process.env.DB_NAME);
+const dbUrl_template = process.env.DB_URL;
+const dbUrl = dbUrl_template
+  .replace('<username>', process.env.DB_USERNAME)
+  .replace('<password>', process.env.DB_PASSWORD)
+  .replace('<host>', process.env.DB_HOST)
+  .replace('<db_name>', process.env.DB_NAME);
 
 
 
