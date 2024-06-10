@@ -8,8 +8,16 @@ module.exports = {
                 { $sort: { order_no: 1 } },
                 { $project: { title: 1, link: 1} }
             ]);
-            console.log(navs);
             res.json(navs);
+        } catch (error) {
+            res.json({ message: error });
+        }
+    },
+    getNavItem: async (req, res) => {
+        const { title } = req.body;
+        try {
+            const nav_item = await NavModel.findOne({ title });
+            res.json(nav_item);
         } catch (error) {
             res.json({ message: error });
         }
@@ -28,6 +36,23 @@ module.exports = {
         } catch (error) {
             res.json({ message: error });
         }
-
+    },
+    delete: async (req, res) => {
+        const { title } = req.body;
+        try {
+            await NavModel.deleteOne({ title });
+            res.json({ message: 'Nav item deleted' });
+        } catch (error) {
+            res.json({ message: error });
+        }
+    },
+    update: async (req, res) => {
+        const { title, link, order_no } = req.body;
+        try {
+            await NavModel.updateOne({ title }, { title, link, order_no });
+            res.json({ message: 'Nav item updated' });
+        } catch (error) {
+            res.json({ message: error });
+        }
     }
 };

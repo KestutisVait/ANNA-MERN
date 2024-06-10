@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import Axios from 'axios';
+
 
 const Wrapper = styled.div`
     width: 100vw;
@@ -42,9 +44,41 @@ const Login = () => {
 
     const navigate = useNavigate();
 
+    useEffect(() => {
+        const token = localStorage.getItem('Access_token') ?? "Bearer null"
+        const validateToken = async () => {
+            try {
+                const response = await Axios.get('http://localhost:4000/api/admin/authenticate', {
+                    headers: {
+                        Authorization: token
+                    }
+                })
+                // if (response.status === 401) {
+                    //     console.log('Not authorized');
+                    // }
+                    // console.log(response.data);
+                    // if (response.data) {
+                        //     navigate('/admin')
+                        // }
+            } catch (error) {
+                if (error.response.status === 401) {
+                    navigate('/login')
+                } else {
+                    console.log(error)
+                }
+                            
+            }
+        }
+
+        validateToken()
+    }, [])
+
     return (
         <Wrapper>
-            <h1 className='header'>Admin dashbord</h1>
+            <h1 className='header'>
+                Admin dashbord
+                <button onClick={() => navigate('/')}>Home</button>
+            </h1>
             <Nav>
                 <div onClick={() => navigate('/admin/nav')}>Navigacija</div>
                 <div onClick={() => navigate('/admin/carousel')}>Skaidrės</div>

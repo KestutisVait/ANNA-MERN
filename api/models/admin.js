@@ -11,6 +11,9 @@ const adminSchema = new mongoose.Schema({
     },
     token: {
         type: String
+    },
+    token_expires: {
+        type: Date
     }
 });
 
