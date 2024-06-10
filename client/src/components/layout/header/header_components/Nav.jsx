@@ -19,12 +19,11 @@ const Nav = (props) => {
                 })
                 setAuthenticated(true)
             } catch (error) {
-                if (error.response.status === 200) {
-                    setAuthenticated(true)
+                if (error.response.status === 401) {
+                    setAuthenticated(false)
                 } else {
-                    console.log(error)
+                    console.error(error);
                 }
-                            
             }
         }
 

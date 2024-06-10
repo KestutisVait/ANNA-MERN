@@ -72,12 +72,24 @@ const Login = () => {
 
         validateToken()
     }, [])
+    const handleLogOut = async () => {
+        const token = localStorage.getItem('Access_token').replace('Bearer ', '')
+        try {
+            const response = await Axios.post('http://localhost:4000/api/admin/logout', {token: token});
+            console.log(response.status);
+            localStorage.removeItem('Access_token')
+            navigate('/')
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     return (
         <Wrapper>
             <h1 className='header'>
                 Admin dashbord
                 <button onClick={() => navigate('/')}>Home</button>
+                <button onClick={handleLogOut}>Log out <i className="bi bi-box-arrow-right"></i></button>
             </h1>
             <Nav>
                 <div onClick={() => navigate('/admin/nav')}>Navigacija</div>

@@ -9,7 +9,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/login', AdminController.login);
-router.get('/logout', AdminController.create);
+router.post('/logout', AdminController.logout);
 router.get(
   '/authenticate', 
   passport.authenticate('bearer', { session: false }), 

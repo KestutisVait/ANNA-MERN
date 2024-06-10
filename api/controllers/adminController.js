@@ -42,5 +42,17 @@ module.exports = {
         } catch (error) {
             res.json({ message: error , login: false});
         }
+    },
+    logout: async (req, res) => {
+        const { token } = req.body;
+        try {
+            const admin_in_db = await AdminModel.findOne({ token });
+            const name = admin_in_db.name;
+            await AdminModel.updateOne({ name }, { $set: {token: null, token_expires: null} });
+            console.log('Admin logged out');
+            res.status(200).json({message: 'Admin logged out'});
+        } catch (error) {
+            res.json({ message: error });
+        }
     }
 };
