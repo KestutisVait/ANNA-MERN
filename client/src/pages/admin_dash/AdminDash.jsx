@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import Axios from 'axios';
+import { AuthContext } from '../../Context';
 
 
 const Wrapper = styled.div`
@@ -29,18 +30,34 @@ const Nav = styled.section`
         transition: 0.2s;
         cursor: pointer;
         &:hover {
-            background-color:#c6cabd;
+            background-color: #c6cabd;
         }
     }
 `;
 const Main = styled.section`
     grid-area: main;
-    margin: 0 20px;
+    margin: 0 20px 0 0;
+    padding: 10px 20px;
     background-color: #dbdfd3;
+    border-left: 1px double var(--dark);
+`;
+const Button = styled.button`
+    background-color: var(--dark);
+    font-family: 'Wix Madefor Text', sans-serif;
+    font-size: 1.2rem;
+    color: white;
+    border: 1px solid white;
+    padding: 10px;
+    cursor: pointer;
+    transition: 0.2s;
+    &:hover {
+        color: var(--on-hover);
+    }
 `;
 
+const AdminDash = () => {
 
-const Login = () => {
+    const { admin, auth, setAuth } = useContext(AuthContext);
 
     const navigate = useNavigate();
 
@@ -48,18 +65,11 @@ const Login = () => {
         const token = localStorage.getItem('Access_token') ?? "Bearer null"
         const validateToken = async () => {
             try {
-                const response = await Axios.get('http://localhost:4000/api/admin/authenticate', {
+                await Axios.get('http://localhost:4000/api/admin/authenticate', {
                     headers: {
                         Authorization: token
                     }
                 })
-                // if (response.status === 401) {
-                    //     console.log('Not authorized');
-                    // }
-                    // console.log(response.data);
-                    // if (response.data) {
-                        //     navigate('/admin')
-                        // }
             } catch (error) {
                 if (error.response.status === 401) {
                     navigate('/login')
@@ -70,14 +80,14 @@ const Login = () => {
             }
         }
 
-        validateToken()
+        if (!auth) validateToken()
     }, [])
     const handleLogOut = async () => {
         const token = localStorage.getItem('Access_token').replace('Bearer ', '')
         try {
-            const response = await Axios.post('http://localhost:4000/api/admin/logout', {token: token});
-            console.log(response.status);
+            await Axios.post('http://localhost:4000/api/admin/logout', {token: token});
             localStorage.removeItem('Access_token')
+            setAuth(false)
             navigate('/')
         } catch (error) {
             console.log(error);
@@ -86,12 +96,15 @@ const Login = () => {
 
     return (
         <Wrapper>
-            <h1 className='header'>
-                Admin dashbord
-                <button onClick={() => navigate('/')}>Home</button>
-                <button onClick={handleLogOut}>Log out <i className="bi bi-box-arrow-right"></i></button>
+            <h1 className='header' style={{display: "flex", justifyContent: "space-between", alignItems: "center", margin: "0 20px"}}>
+                Admin dashbord. Wellcome {admin}
+                <div>
+                    <Button onClick={() => navigate('/')}>Home</Button>
+                    <Button onClick={handleLogOut}>Log out <i className="bi bi-box-arrow-right"></i></Button>
+                </div>
             </h1>
             <Nav>
+                <div onClick={() => navigate('/admin')}>Administracija</div>
                 <div onClick={() => navigate('/admin/nav')}>Navigacija</div>
                 <div onClick={() => navigate('/admin/carousel')}>Skaidrės</div>
             </Nav>
@@ -102,4 +115,4 @@ const Login = () => {
     )
 }
 
-export default Login
+export default AdminDash

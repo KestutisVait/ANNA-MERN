@@ -1,7 +1,10 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useContext } from 'react';
 import styled from 'styled-components';
 import Axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../Context';
+import UsernameInput from '../components/inputs/username';
+import PasswordInput from '../components/inputs/password';
 
 const Wrapper = styled.div`
     width: 100vw;
@@ -59,89 +62,42 @@ const Button = styled.button`
 `;
 
 const Login = () => {
+    const { setAuth, setAdmin } = useContext(AuthContext);
     const navigate = useNavigate();
-    const usernameRef = useRef(null);
-    const passwordRef = useRef(null);
-    const [showPassword, setShowPassword] = useState(false);
-    const [usernameError, setUsernameError] = useState('');
-    const [passwordError, setPasswordError] = useState('');
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [usernameError, setUsernameError] = useState([]);
+    const [passwordError, setPasswordError] = useState([]);
 
-    const handleShowPassword = () => {
-        setShowPassword(!showPassword);
-    }
     const handleFocus = (event) => {
         event.target.removeAttribute('readOnly');
     };
         
     const handleSubmit = async (event) => {
         event.preventDefault();
-        const name = usernameRef.current.value;
-        const password = passwordRef.current.value;
         setUsernameError('');
         setPasswordError('');
-        // console.log(username, password);
         try {
-            const login = await Axios.post('http://localhost:4000/api/admin/login', {name, password})
-            if (login.data.login) {
-                const token = 'Bearer ' + login.data.token
-                localStorage.setItem('Access_token', token);
-                navigate('/admin')
-            } else {
-                if (login.data.target === 'username') {
-                    setUsernameError(login.data.message);
-                } else {
-                    setPasswordError(login.data.message);
-                }
-            }
+            const login = await Axios.post('http://localhost:4000/api/admin/login', {name: username, password: password})
+            const token = 'Bearer ' + login.data.token
+            localStorage.setItem('Access_token', token);
+            setAuth(true);
+            setAdmin(login.data.name);
+            navigate('/admin')
         } catch (error) {
-            console.log(error);
+            const errors = error.response.data;
+            errors.hasOwnProperty('name') && setUsernameError(errors.name);
+            errors.hasOwnProperty('password') && setPasswordError(errors.password);
         }
-
     }
 
     return (
         <Wrapper>
             <FormWrapper>
-                <div className="form-floating input-wrapper">
-                    <input 
-                        type="text" 
-                        className="form-control" 
-                        id="user_input_field" 
-                        placeholder="Username"
-                        // autoComplete='off'
-                        // spellCheck='false'
-                        // autoCorrect='off'
-                        name='username'
-                        required
-                        readOnly
-                        onFocus={handleFocus}
-                        ref={usernameRef}>
-                    </input>
-                    <label htmlFor="user_input_field">Username</label>
-                </div>
-                {usernameError && <Error>{usernameError}</Error>}
-                <div className="form-floating input-wrapper">
-                    <input 
-                        type={showPassword ? "text" : "password"} 
-                        className="form-control" 
-                        id="password_input_field" 
-                        placeholder="Password"
-                        // autoComplete='off'
-                        name='password'
-                        required
-                        readOnly
-                        onFocus={handleFocus}
-                        ref={passwordRef}>
-                    </input>
-                    {showPassword ? 
-                        <i className="bi bi-eye-slash-fill" onClick={handleShowPassword}></i> 
-                        : <i className="bi bi-eye-fill" onClick={handleShowPassword}></i>}
-                    <label htmlFor="password_input_field">Password</label>
-                </div>
-                {passwordError && <Error>{passwordError}</Error>}
+                <UsernameInput value={setUsername} validationErrors={usernameError} />
+                <PasswordInput value={setPassword} validationErrors={passwordError} label='Password'/>
                 <Button type="submit" onClick={handleSubmit}>Login</Button>
             </FormWrapper>
-
         </Wrapper>
     )
 }

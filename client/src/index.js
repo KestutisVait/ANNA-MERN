@@ -5,7 +5,7 @@ import App from './App';
 import Landing from './pages/Landing';
 import Login from './pages/Login';
 import AdminDash from './pages/admin_dash/AdminDash';
-import AdminWellcome from './pages/admin_dash/outlets/AdminWellcome';
+import Admins from './pages/admin_dash/outlets/admins/Admins';
 import Navigation from './pages/admin_dash/outlets/Navigation';
 import Carousel from './pages/admin_dash/outlets/Slides';
 import {
@@ -14,6 +14,7 @@ import {
   RouterProvider,
   Route,
 } from "react-router-dom";
+import { AuthContextProvider } from './Context';
 
 
 const router = createBrowserRouter(
@@ -23,7 +24,7 @@ const router = createBrowserRouter(
         <Route index element={<Landing />} />
       </Route>
       <Route path="/admin" element={<AdminDash />}>
-        <Route index element={<AdminWellcome />} />
+        <Route index element={<Admins />} />
         <Route path="/admin/nav" element={<Navigation />} />
         <Route path="/admin/carousel" element={<Carousel />} />
       </Route>
@@ -34,6 +35,8 @@ const router = createBrowserRouter(
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <RouterProvider router={router} />
+  <AuthContextProvider>
+    <RouterProvider router={router} />
+  </AuthContextProvider>
 );
 

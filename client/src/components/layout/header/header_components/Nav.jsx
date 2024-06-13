@@ -1,34 +1,12 @@
-import React, { useState, useEffect } from 'react'
-import Axios from 'axios'
+import React, { useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { AuthContext } from '../../../../Context'
 
 const Nav = (props) => {
 
     const navigate = useNavigate();
 
-    const [authenticated, setAuthenticated] = useState(false);
-
-    useEffect(() => {
-        const token = localStorage.getItem('Access_token') ?? "Bearer null"
-        const validateToken = async () => {
-            try {
-                const response = await Axios.get('http://localhost:4000/api/admin/authenticate', {
-                    headers: {
-                        Authorization: token
-                    }
-                })
-                setAuthenticated(true)
-            } catch (error) {
-                if (error.response.status === 401) {
-                    setAuthenticated(false)
-                } else {
-                    console.error(error);
-                }
-            }
-        }
-
-        validateToken()
-    }, [])
+    const { auth } = useContext(AuthContext);
 
     const capitalize = (str) => {
         return str.toUpperCase();
@@ -39,7 +17,7 @@ const Nav = (props) => {
             {props.nav_items.map((item, index) =>
                 <div key={index} className="nav-item">{capitalize(item.title)}</div>
                 )}
-            {authenticated && <div className='nav-item' onClick={() => navigate('/admin')}>ADMIN PANELĖ</div>}
+            {auth && <div className='nav-item' onClick={() => navigate('/admin')}>ADMIN PANELĖ</div>}
         </div>
     )
 }
