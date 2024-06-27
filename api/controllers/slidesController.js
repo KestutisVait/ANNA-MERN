@@ -1,6 +1,23 @@
 const SlideModel = require('../models/carousel');
 const { validationResult } = require('express-validator');
 
+
+function validationErrorMessages(errors) {
+    const validation_err_messages = {}
+    const validation_messages = errors;
+    for (let msg of validation_messages) {
+        const key = msg.path;
+        const value = msg.msg;
+        if (!validation_err_messages[key]) {
+            validation_err_messages[key] = [value]
+        } else {
+            validation_err_messages[key].push(value)
+        }
+    }
+    return validation_err_messages
+}
+
+
 module.exports = {
     getSlides: async (req, res) => {
         try {
@@ -14,6 +31,8 @@ module.exports = {
     },
 
     create: async (req, res) => {
+        console.log(req.body);
+        console.log('adding slide');
         const validation = validationResult(req);
         
         if (validation.isEmpty()) {
@@ -23,6 +42,7 @@ module.exports = {
                 res.status(200).json(newSlide);
             } catch (error) {
                 res.status(400).json(error);
+                console.log(error);
             }
         } else {
             const validation_err_messages = validationErrorMessages(validation.errors);

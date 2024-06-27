@@ -7,11 +7,10 @@ const Wrapper = styled.div`
     width: 100%;
     height: 400px;
     margin: 20px auto;
+    padding: 15px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    // background-color: #f2f1ec;
     background-image: linear-gradient(
         45deg,
         rgba(61, 61, 61, 0.15) 12.5%,
@@ -30,15 +29,13 @@ const Wrapper = styled.div`
         transparent 87.5%,
         transparent
     );  
-    background-size: 15px 15px; /* Adjust the size to control the pattern */
+    background-size: 15px 15px;
+    border: 1px solid rgba(61, 61, 61, 0.15);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 `;
 const TextInputsWrapper = styled.div`
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
     display: flex;
-    padding: 1rem;
+    padding:0 0 1rem ;
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -65,12 +62,8 @@ const TextInputsWrapper = styled.div`
     }
 `;
 const Button = styled.button`
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
     padding: 0.5rem 2rem; 
-    margin: 2rem 0 1rem ;
+    margin: 1rem 0 0;
     border: none;
     background-color: var(--dark);
     color: white; 
@@ -139,12 +132,15 @@ const SlideForm = (props) => {
 
     const titleRef = useRef(null);
     const descriptionRef = useRef(null);
+    const linkRef = useRef(null);
 
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
+    const [link, setLink] = useState('');
 
-    const [titleError, setUsernameError] = useState([]);
+    const [titleError, setTitleError] = useState([]);
     const [descriptionError, setDescriptionError] = useState([]);
+    const [linkError, setLinkError] = useState([]);
 
     useEffect(() => {
 
@@ -166,17 +162,26 @@ const SlideForm = (props) => {
     const handleSubmit = async (event) => {
         event.preventDefault();
         console.log('form submitted');
-        // setUsernameError('');
-        // try {
-        //     props.type === 'add' ?
-        //         await Axios.post('http://localhost:4000/api/admin/create', {name: username, password: password, password_confirm: passwordConfirm}) :
-        //         await Axios.put('http://localhost:4000/api/admin/update', {id: adminId, name: username, password: password, password_confirm: passwordConfirm})
-        //     props.onSubmit && props.onSubmit();
-        //     props.setShowAddForm ? props.setShowAddForm(false) : props.setShowEditForm(false);
-        // } catch (error) {
-        //     const errors = error.response.data;
-        //     errors.hasOwnProperty('name') && setUsernameError(errors.name);
-        // }
+        setTitleError('');
+        setDescriptionError('');
+        setLinkError('');
+
+        const image = './images/banner2.jpg';
+        const order_no = props.slide_count + 1;
+        console.log(title, description, link, image, order_no);
+        try {
+            props.type === 'add' ?
+                await Axios.post('http://localhost:4000/api/slides/add', {title, description, link, image, order_no}) :
+                await Axios.put('http://localhost:4000/api/slides/add', {title: title, description: description, link: link, image: image, order_no: order_no})
+            props.onSubmit && props.onSubmit();
+            props.setShowAddForm ? props.setShowAddForm(false) : props.setShowEditForm(false);
+        } catch (error) {
+            console.log(error);
+            const errors = error.response.data;
+            errors.hasOwnProperty('title') && setTitleError(errors.title);
+            errors.hasOwnProperty('description') && setDescriptionError(errors.description);
+            errors.hasOwnProperty('link') && setLinkError(errors.link);
+        }
     };
     const handleClose = () => {
         props.setShowAddForm ? props.setShowAddForm(false) : props.setShowEditForm(false);
@@ -184,8 +189,8 @@ const SlideForm = (props) => {
 
     return (
         <Wrapper>
+            {props.type === 'add' ? <h5>Pridėti naują skaidrę</h5> : <h5>Redaguoti skaidrės informaciją</h5>}
             <TextInputsWrapper>
-                {props.type === 'add' ? <h5>Pridėti naują skaidrę</h5> : <h5>Redaguoti skaidrės informaciją</h5>}
                 <div className="form-floating input-wrapper">
                     <input 
                         type="text" 
@@ -205,10 +210,11 @@ const SlideForm = (props) => {
                     </input>
                     <label htmlFor="title_input_field">Antraštė</label>
                 </div>
+                {titleError.length > 0 && titleError.map((error, index) => <Error key={index}>{error}</Error>)}
                 <div className="form-floating input-wrapper">
                     <textarea 
                         className="form-control" 
-                        style={{height: "9rem"}}
+                        style={{height: "9rem", maxHeight: "9rem", minHeight: "9rem"}}
                         maxLength={200}
                         id="description_input_field" 
                         placeholder="Description"
@@ -225,6 +231,27 @@ const SlideForm = (props) => {
                     </textarea>
                     <label htmlFor="description_input_field">Trumpas aprašymas</label>
                 </div>
+                {descriptionError.length > 0 && descriptionError.map((error, index) => <Error key={index}>{error}</Error>)}
+                <div className="form-floating input-wrapper">
+                    <input 
+                        type="text" 
+                        className="form-control" 
+                        id="link_input_field" 
+                        placeholder="Title"
+                        autoComplete='off'
+                        spellCheck='false'
+                        autoCorrect='off'
+                        name='link'
+                        required
+                        readOnly
+                        onFocus={handleFocus}
+                        ref={linkRef}
+                        value={link.replace('/', '')}
+                        onChange={(e) => setLink("/" + e.target.value)}>
+                    </input>
+                    <label htmlFor="link_input_field">Puslapio nuorodos raktažodis</label>
+                </div>
+                {linkError.length > 0 && linkError.map((error, index) => <Error key={index}>{error}</Error>)}
             </TextInputsWrapper>
             <CloseButton className="bi bi-x-circle-fill" onClick={handleClose}></CloseButton>
             <Button type="submit" onClick={handleSubmit}>{props.type === 'edit' ? 'REDAGUOTI' : 'PRIDĖTI'}</Button>

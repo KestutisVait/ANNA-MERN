@@ -18,7 +18,7 @@ const SlidesWrapper = styled.div`
 const AddSlideButton = styled.div`
     align-self: flex-end;
     width: fit-content;
-    padding: 5px 15px;
+    padding: 15px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -67,12 +67,11 @@ const Slides = () => {
     const [slides, setSlides] = useState([]);
     const [showAddForm, setShowAddForm] = useState(false)
 
+    const getSlides = async () => {
+        const slides = await Axios.get('http://localhost:4000/api/slides')
+        setSlides(slides.data);
+    }
     useEffect(() => {
-        const getSlides = async () => {
-            const slides = await Axios.get('http://localhost:4000/api/slides')
-            setSlides(slides.data);
-        }
-
         getSlides()
     }, [])
 
@@ -89,7 +88,7 @@ const Slides = () => {
                     <Slide key={index} data-index={index} slide={slide}/>
                 ))}
             </SlidesWrapper>
-            {showAddForm && <AddSlideForm setShowAddForm={setShowAddForm} type="add"/>}
+            {showAddForm && <AddSlideForm setShowAddForm={setShowAddForm} type="add" slide_count={slides.length} onSubmit={getSlides}/>}
         
         </Wrapper>
     )

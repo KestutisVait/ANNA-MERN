@@ -5,6 +5,6 @@ const SlideRequests = require('../requests/SkideRequests');
 
 /* GET home page. */
 router.get('/', SlideController.getSlides);
-router.get('/add', SlideController.create);
+router.post('/add', SlideRequests.createSlide, SlideController.create);
 
 module.exports = router;

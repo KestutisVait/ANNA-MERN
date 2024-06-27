@@ -15,7 +15,7 @@ const slideSchema = new mongoose.Schema({
     },
     link: {
         type: String,
-        // required: true
+        required: true
     },
     order_no: {
         type: Number,
