@@ -116,7 +116,7 @@ const Admins = () => {
                 <AdminListItem  className='parent' key={index} data-index={index}>
                     {admin.name}
                     <div style={{display: "flex"}}>
-                        <Icon className="bi bi-pencil-fill" $edit onClick={handleClickEdit}></Icon>
+                        {admin.name !== 'Tower' && <Icon className="bi bi-pencil-fill" $edit onClick={handleClickEdit}></Icon>}
                         {admin.name !== 'Tower' && <Icon className="bi bi-trash3-fill" $delete onClick={handleDelete}></Icon>}
                     </div>
                 </AdminListItem>

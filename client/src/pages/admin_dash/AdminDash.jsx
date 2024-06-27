@@ -57,19 +57,23 @@ const Button = styled.button`
 
 const AdminDash = () => {
 
-    const { admin, auth, setAuth } = useContext(AuthContext);
+    const { admin, setAdmin, auth, setAuth } = useContext(AuthContext);
 
     const navigate = useNavigate();
 
     useEffect(() => {
         const token = localStorage.getItem('Access_token') ?? "Bearer null"
+        console.log(token);
         const validateToken = async () => {
             try {
-                await Axios.get('http://localhost:4000/api/admin/authenticate', {
+                const response = await Axios.get('http://localhost:4000/api/admin/authenticate', {
                     headers: {
                         Authorization: token
                     }
                 })
+                console.log(response.data)
+                setAdmin(response.data.admin)
+                setAuth(true)
             } catch (error) {
                 if (error.response.status === 401) {
                     navigate('/login')
@@ -105,7 +109,7 @@ const AdminDash = () => {
             </h1>
             <Nav>
                 <div onClick={() => navigate('/admin')}>Administracija</div>
-                <div onClick={() => navigate('/admin/nav')}>Navigacija</div>
+                {/* <div onClick={() => navigate('/admin/nav')}>Navigacija</div> */}
                 <div onClick={() => navigate('/admin/carousel')}>Skaidrės</div>
             </Nav>
             <Main >

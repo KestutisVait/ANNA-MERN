@@ -15,7 +15,7 @@ router.post('/logout', AdminController.logout);
 router.get(
   '/authenticate', 
   passport.authenticate('bearer', { session: false }), 
-  (req, res) => res.json({authenticated: true}));
+  (req, res) => res.status(200).json({authenticated: true, admin: req.user.name}));
 
 
 module.exports = router;

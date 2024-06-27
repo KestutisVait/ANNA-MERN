@@ -69,9 +69,9 @@ const Login = () => {
     const [usernameError, setUsernameError] = useState([]);
     const [passwordError, setPasswordError] = useState([]);
 
-    const handleFocus = (event) => {
-        event.target.removeAttribute('readOnly');
-    };
+    // const handleFocus = (event) => {
+    //     event.target.removeAttribute('readOnly');
+    // };
         
     const handleSubmit = async (event) => {
         event.preventDefault();

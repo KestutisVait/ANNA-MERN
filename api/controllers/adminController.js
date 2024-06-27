@@ -101,7 +101,7 @@ module.exports = {
             try {
                 const admin_in_db = await AdminModel.findOne({ name });
                 if (!admin_in_db) {
-                    res.json({ name: ['Admin with this username does not exists'] });
+                    res.status(400).json({ name: ['Admin with this username does not exists'] });
                 } else {
                     if (await bcryptjs.compare(password, admin_in_db.password)) {
                         const token_body = {name};

@@ -7,7 +7,7 @@ import Login from './pages/Login';
 import AdminDash from './pages/admin_dash/AdminDash';
 import Admins from './pages/admin_dash/outlets/admins/Admins';
 import Navigation from './pages/admin_dash/outlets/Navigation';
-import Carousel from './pages/admin_dash/outlets/Slides';
+import Carousel from './pages/admin_dash/outlets/slides/Slides';
 import {
   createBrowserRouter,
   createRoutesFromElements,
