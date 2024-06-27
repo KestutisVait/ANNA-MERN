@@ -1,5 +1,5 @@
 import React from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState} from 'react';
 import Slide from './Slide';
 import styled from 'styled-components';
 import Axios from 'axios';
@@ -19,20 +19,15 @@ const CarousellWrapper = styled.div`
 
 const Carousel = () => {
 
+
     const [slides, setSlides] = useState([]);
 
 
     useEffect(() => {
         const getSlides = async () => {
-            const slides_array = [];
-            const slides = await Axios.get('./data/slides.json');
-            // console.log(slides.data);
-            const data = slides.data;
-            for (let s in data) {
-                // console.log(data[s]);
-                slides_array.push(data[s]);
-            }
-            setSlides(slides_array);
+            const slides = await Axios.get('http://localhost:4000/api/slides');
+            console.log(slides.data);
+            setSlides(slides.data);
         }
 
         getSlides();

@@ -31,8 +31,8 @@ const Icon = styled.i`
     cursor: pointer;
     position: relative;
     color: ${props => props.$delete ? 'red' : 'var(--dark)'};
-    transition: 0.2s;
     margin: 0 9px;
+    transition: 0.2s;
     &:hover {
         color: var(--on-hover);
         &::after {

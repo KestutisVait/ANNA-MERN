@@ -17,9 +17,9 @@ module.exports = {
         const validation = validationResult(req);
         
         if (validation.isEmpty()) {
-            const { title, image, description } = req.body;
+            const { title, image, description, link, order_no } = req.body;
             try {
-                const newSlide = await SlideModel.create({ title, image, description });
+                const newSlide = await SlideModel.create({ title, image, description, link, order_no });
                 res.status(200).json(newSlide);
             } catch (error) {
                 res.status(400).json(error);

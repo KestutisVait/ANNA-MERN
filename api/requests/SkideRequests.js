@@ -5,12 +5,13 @@ module.exports = {
         body("title")
             .trim()
             .escape()
-            .not().isEmpty().withMessage("Title is required"),
+            .not().isEmpty().withMessage("Title is required")
+            .isLength({ max: 50 }).withMessage("Description must be at most 50 characters long"),
         body("description")
             .trim()
             .escape()
             .not().isEmpty().withMessage("Description is required")
-            .isLength({ max: 200 }).withMessage("Description must be at most 200 characters long"),
+            .isLength({ max: 200 }).withMessage("Description must be at most 200 characters long")
     ]
 
 }

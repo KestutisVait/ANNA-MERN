@@ -63,7 +63,6 @@ const AdminDash = () => {
 
     useEffect(() => {
         const token = localStorage.getItem('Access_token') ?? "Bearer null"
-        console.log(token);
         const validateToken = async () => {
             try {
                 const response = await Axios.get('http://localhost:4000/api/admin/authenticate', {
@@ -71,7 +70,6 @@ const AdminDash = () => {
                         Authorization: token
                     }
                 })
-                console.log(response.data)
                 setAdmin(response.data.admin)
                 setAuth(true)
             } catch (error) {

@@ -68,7 +68,7 @@ const Slide = (props) => {
         <div className={props.className}>
             <Wrapper $img={props.data.image}>
                 <Info>
-                    <h5>{props.data.title}</h5>
+                    <h5>{capitalize(props.data.title)}</h5>
                     <p>{capitalize(props.data.description)}</p>
                     <Button>PLAČIAU</Button> 
                     {/* <Button onClick={ () => navigate(props.data.link)}>PLAČIAU</Button> <------- use when adding links  */}
