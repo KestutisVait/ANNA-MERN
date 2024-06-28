@@ -264,10 +264,6 @@ const SlideForm = (props) => {
                 </TextInputsWrapper>
                 <CloseButton className="bi bi-x-circle-fill" onClick={handleClose}></CloseButton>
                 <Button type="submit" onClick={handleSubmit}>{props.type === 'edit' ? 'REDAGUOTI' : 'PRIDĖTI'}</Button>
-                {/* <DragArea > 
-                    <i className="bi bi-file-image-fill" ></i>
-                    <p>Drag your image here</p>
-                </DragArea> */}
                 <Dropzone onFileChange={handleFileChange}/>
                 <ClearBgButton onClick={() => setPreview(null)}>Išvalyti foną</ClearBgButton>
             </Wrapper>
