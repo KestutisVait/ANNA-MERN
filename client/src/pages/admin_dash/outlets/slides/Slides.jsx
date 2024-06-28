@@ -89,7 +89,6 @@ const Slides = () => {
                 ))}
             </SlidesWrapper>
             {showAddForm && <AddSlideForm setShowAddForm={setShowAddForm} type="add" slide_count={slides.length} onSubmit={getSlides}/>}
-        
         </Wrapper>
     )
 }

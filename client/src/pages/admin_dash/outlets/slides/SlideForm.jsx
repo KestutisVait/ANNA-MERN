@@ -1,41 +1,53 @@
 import React , { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import Axios from 'axios';
+import Dropzone from './dropzone'
 
-const Wrapper = styled.div`
-    position: relative;
-    width: 100%;
-    height: 400px;
-    margin: 20px auto;
-    padding: 15px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-image: linear-gradient(
-        45deg,
-        rgba(61, 61, 61, 0.15) 12.5%,
-        transparent 12.5%,
-        transparent 25%,
-        rgba(61, 61, 61, 0.15) 25%,
-        rgba(61, 61, 61, 0.15) 37.5%,
-        transparent 37.5%,
-        transparent 50%,
-        rgba(61, 61, 61, 0.15) 50%,
-        rgba(61, 61, 61, 0.15) 62.5%,
-        transparent 62.5%,
-        transparent 75%,
-        rgba(61, 61, 61, 0.15) 75%,
-        rgba(61, 61, 61, 0.15) 87.5%,
-        transparent 87.5%,
-        transparent
-    );  
-    background-size: 15px 15px;
-    border: 1px solid rgba(61, 61, 61, 0.15);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+const Heading = styled.h5`
+    color: var(--dark);
+    margin: 0;
+    padding: 20px 0 5px ;
+    text-align: center;
+`;
+const Wrapper = styled.div.attrs((props) => ({
+    $backgroundimage: props.backgroundimage
+}))`
+  position: relative;
+  width: 100%;
+  height: auto;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: ${({ $backgroundimage }) =>
+    $backgroundimage
+      ? `url(${$backgroundimage}) right;`
+      : `linear-gradient(
+          45deg,
+          rgba(61, 61, 61, 0.15) 12.5%,
+          transparent 12.5%,
+          transparent 25%,
+          rgba(61, 61, 61, 0.15) 25%,
+          rgba(61, 61, 61, 0.15) 37.5%,
+          transparent 37.5%,
+          transparent 50%,
+          rgba(61, 61, 61, 0.15) 50%,
+          rgba(61, 61, 61, 0.15) 62.5%,
+          transparent 62.5%,
+          transparent 75%,
+          rgba(61, 61, 61, 0.15) 75%,
+          rgba(61, 61, 61, 0.15) 87.5%,
+          transparent 87.5%,
+          transparent
+        )`};
+  background-size: ${({ $backgroundimage }) => ($backgroundimage ? 'cover' : '15px 15px')};
+  border: 1px solid rgba(61, 61, 61, 0.15);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 `;
 const TextInputsWrapper = styled.div`
     display: flex;
-    padding:0 0 1rem ;
+    padding: 0 0 1rem;
+    margin-top: 1rem;
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -84,48 +96,28 @@ const CloseButton = styled.i`
         color: var(--on-hover);
     }
 `;
+const ClearBgButton = styled.button`
+    position: absolute;
+    top: 120px;
+    left: 10px;
+    width: 100px;
+    cursor: pointer;
+    padding: 5px;
+    font-size: 0.8rem;
+    color: var(--light);
+    background-color:  rgba(61, 61, 61, 0.5);
+    border: none;
+    transition: 0.2s;
+    &:hover {
+        // color: var(--on-hover);
+        background-color:  rgba(61, 61, 61, 0.8);
+`;
 const Error = styled.div`
     color: red;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-`;
-const DragArea = styled.div`
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    width: 100px;
-    height: 100px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    cursor: pointer;
-    border: 3px dashed rgba(61, 61, 61, 0.5);
-    transition: 0.2s;
-    i {
-        color: var(--dark);
-        font-size: 2rem;
-        padding: 0 3px ;
-        transition: 0.2s;
-    }
-    p {
-        color: rgba(61, 61, 61, 0.5);
-        text-align: center;
-        font-weight: 600;
-        line-height: 1rem;
-        margin: 5px;
-        transition: 0.2s;
-    }
-    &:hover {
-        border: 3px dashed var(--dark);
-        i {
-            color: var(--on-hover);
-        }
-        p {
-            color: var(--dark);
-        }
-    }
 `;
 
 const SlideForm = (props) => {
@@ -141,6 +133,8 @@ const SlideForm = (props) => {
     const [titleError, setTitleError] = useState([]);
     const [descriptionError, setDescriptionError] = useState([]);
     const [linkError, setLinkError] = useState([]);
+
+    const [preview, setPreview] = useState(null);
 
     useEffect(() => {
 
@@ -186,80 +180,98 @@ const SlideForm = (props) => {
     const handleClose = () => {
         props.setShowAddForm ? props.setShowAddForm(false) : props.setShowEditForm(false);
     };
+    const handleFileChange = (file, previewUrl) => {
+        // Handle file selection
+        console.log(file);
+        setPreview(previewUrl);
+      };
+
+      useEffect(() => {
+        return () => {
+          if (preview) {
+            URL.revokeObjectURL(preview);
+          }
+        };
+      }, [preview]);
+    
 
     return (
-        <Wrapper>
-            {props.type === 'add' ? <h5>Pridėti naują skaidrę</h5> : <h5>Redaguoti skaidrės informaciją</h5>}
-            <TextInputsWrapper>
-                <div className="form-floating input-wrapper">
-                    <input 
-                        type="text" 
-                        className="form-control" 
-                        id="title_input_field" 
-                        placeholder="Title"
-                        autoComplete='off'
-                        spellCheck='false'
-                        autoCorrect='off'
-                        name='title'
-                        required
-                        readOnly
-                        onFocus={handleFocus}
-                        ref={titleRef}
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}>
-                    </input>
-                    <label htmlFor="title_input_field">Antraštė</label>
-                </div>
-                {titleError.length > 0 && titleError.map((error, index) => <Error key={index}>{error}</Error>)}
-                <div className="form-floating input-wrapper">
-                    <textarea 
-                        className="form-control" 
-                        style={{height: "9rem", maxHeight: "9rem", minHeight: "9rem"}}
-                        maxLength={200}
-                        id="description_input_field" 
-                        placeholder="Description"
-                        autoComplete='off'
-                        spellCheck='false'
-                        autoCorrect='off'
-                        name='description'
-                        required
-                        readOnly
-                        onFocus={handleFocus}
-                        ref={descriptionRef}
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}>
-                    </textarea>
-                    <label htmlFor="description_input_field">Trumpas aprašymas</label>
-                </div>
-                {descriptionError.length > 0 && descriptionError.map((error, index) => <Error key={index}>{error}</Error>)}
-                <div className="form-floating input-wrapper">
-                    <input 
-                        type="text" 
-                        className="form-control" 
-                        id="link_input_field" 
-                        placeholder="Title"
-                        autoComplete='off'
-                        spellCheck='false'
-                        autoCorrect='off'
-                        name='link'
-                        required
-                        readOnly
-                        onFocus={handleFocus}
-                        ref={linkRef}
-                        value={link.replace('/', '')}
-                        onChange={(e) => setLink("/" + e.target.value)}>
-                    </input>
-                    <label htmlFor="link_input_field">Puslapio nuorodos raktažodis</label>
-                </div>
-                {linkError.length > 0 && linkError.map((error, index) => <Error key={index}>{error}</Error>)}
-            </TextInputsWrapper>
-            <CloseButton className="bi bi-x-circle-fill" onClick={handleClose}></CloseButton>
-            <Button type="submit" onClick={handleSubmit}>{props.type === 'edit' ? 'REDAGUOTI' : 'PRIDĖTI'}</Button>
-            <DragArea > 
-                <i className="bi bi-file-image-fill" ></i>
-                <p>Drag your image here</p>
-            </DragArea>
-        </Wrapper>
+        <>
+            {props.type === 'add' ? <Heading>Pridėti naują skaidrę</Heading> : <Heading>Redaguoti skaidrės informaciją</Heading>}
+            <Wrapper backgroundimage={preview}>
+                <TextInputsWrapper>
+                    <div className="form-floating input-wrapper">
+                        <input 
+                            type="text" 
+                            className="form-control" 
+                            id="title_input_field" 
+                            placeholder="Title"
+                            autoComplete='off'
+                            spellCheck='false'
+                            autoCorrect='off'
+                            name='title'
+                            required
+                            readOnly
+                            onFocus={handleFocus}
+                            ref={titleRef}
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}>
+                        </input>
+                        <label htmlFor="title_input_field">Antraštė</label>
+                    </div>
+                    {titleError.length > 0 && titleError.map((error, index) => <Error key={index}>{error}</Error>)}
+                    <div className="form-floating input-wrapper">
+                        <textarea 
+                            className="form-control" 
+                            style={{height: "9rem", maxHeight: "9rem", minHeight: "9rem"}}
+                            maxLength={200}
+                            id="description_input_field" 
+                            placeholder="Description"
+                            autoComplete='off'
+                            spellCheck='false'
+                            autoCorrect='off'
+                            name='description'
+                            required
+                            readOnly
+                            onFocus={handleFocus}
+                            ref={descriptionRef}
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}>
+                        </textarea>
+                        <label htmlFor="description_input_field">Trumpas aprašymas</label>
+                    </div>
+                    {descriptionError.length > 0 && descriptionError.map((error, index) => <Error key={index}>{error}</Error>)}
+                    <div className="form-floating input-wrapper">
+                        <input 
+                            type="text" 
+                            className="form-control" 
+                            id="link_input_field" 
+                            placeholder="Title"
+                            autoComplete='off'
+                            spellCheck='false'
+                            autoCorrect='off'
+                            name='link'
+                            required
+                            readOnly
+                            onFocus={handleFocus}
+                            ref={linkRef}
+                            value={link.replace('/', '')}
+                            onChange={(e) => setLink("/" + e.target.value)}>
+                        </input>
+                        <label htmlFor="link_input_field">Puslapio nuorodos raktažodis</label>
+                    </div>
+                    {linkError.length > 0 && linkError.map((error, index) => <Error key={index}>{error}</Error>)}
+                </TextInputsWrapper>
+                <CloseButton className="bi bi-x-circle-fill" onClick={handleClose}></CloseButton>
+                <Button type="submit" onClick={handleSubmit}>{props.type === 'edit' ? 'REDAGUOTI' : 'PRIDĖTI'}</Button>
+                {/* <DragArea > 
+                    <i className="bi bi-file-image-fill" ></i>
+                    <p>Drag your image here</p>
+                </DragArea> */}
+                <Dropzone onFileChange={handleFileChange}/>
+                <ClearBgButton onClick={() => setPreview(null)}>Išvalyti foną</ClearBgButton>
+            </Wrapper>
+        </>
     )
 }
 
