@@ -155,7 +155,6 @@ const SlideForm = (props) => {
     };
     const handleSubmit = async (event) => {
         event.preventDefault();
-        console.log('form submitted');
         setTitleError('');
         setDescriptionError('');
         setLinkError('');
@@ -167,7 +166,6 @@ const SlideForm = (props) => {
         formData.append('link', link);
         formData.append('image', image);
         formData.append('order_no', order_no);
-        console.log(formData);
         try {
             props.type === 'add' ?
                 await Axios.post('http://localhost:4000/api/slides/add', formData, {headers: {'Content-Type': 'multipart/form-data'}}) :
@@ -186,8 +184,7 @@ const SlideForm = (props) => {
         props.setShowAddForm ? props.setShowAddForm(false) : props.setShowEditForm(false);
     };
     const handleFileChange = (file, previewUrl) => {
-        // Handle file selection
-        console.log(file);
+        // console.log(file);
         setImage(file)
         setPreview(previewUrl);
       };

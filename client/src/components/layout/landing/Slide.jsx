@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 // import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import Axios from 'axios';
 
 const Wrapper = styled.div`
     height: 300px;
@@ -58,6 +59,7 @@ const Button = styled.div`
 
 const Slide = (props) => {
 
+    const image = `http://localhost:4000/${props.data.image}`;
     // const navigate = useNavigate();
 
     const capitalize = (str) => {
@@ -66,7 +68,7 @@ const Slide = (props) => {
 
     return (
         <div className={props.className}>
-            <Wrapper $img={props.data.image}>
+            <Wrapper $img={image}>
                 <Info>
                     <h5>{capitalize(props.data.title)}</h5>
                     <p>{capitalize(props.data.description)}</p>

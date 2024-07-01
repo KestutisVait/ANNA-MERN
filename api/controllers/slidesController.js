@@ -1,6 +1,7 @@
 const SlideModel = require('../models/carousel');
 const { validationResult } = require('express-validator');
 var fs = require('node:fs/promises');
+const path = require('path');
 
 
 function validationErrorMessages(errors) {
@@ -38,7 +39,7 @@ module.exports = {
             const { title, description, link, order_no } = req.body;
             const linkUrl = `/${link}`;
             console.log(req.body);
-            const imageUrl = req.file ? `./images/${req.file.originalname}`: null
+            const imageUrl = req.file ? `images/${req.file.originalname}`: null
             try {
                 if (req.file) {
                     const ext = {"image/webp": ".webp", "image/png": ".png", "image/jpeg": ".jpg"};
@@ -56,10 +57,12 @@ module.exports = {
         }
     },
     delete: async (req, res) => {
-        const { _id } = req.body;
+        const { _id, image } = req.body;
         try {
             await SlideModel.deleteOne({ _id });
+            fs.unlink(path.join(__dirname, '..',  'public', image));
             res.json({ message: 'Slide deleted' });
+
         } catch (error) {
             res.json({ message: error });
         }

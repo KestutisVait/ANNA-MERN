@@ -26,7 +26,6 @@ const Carousel = () => {
     useEffect(() => {
         const getSlides = async () => {
             const slides = await Axios.get('http://localhost:4000/api/slides');
-            console.log(slides.data);
             setSlides(slides.data);
         }
 

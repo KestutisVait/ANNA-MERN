@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Axios from 'axios';
 
@@ -68,6 +68,8 @@ const ModalWrapper = styled.div`
 // 
 const SlideCard = (props) => {
 
+
+
     const [showModal, setShowModal] = useState(false);
     
     const capitalize = (str) => {
@@ -80,7 +82,7 @@ const SlideCard = (props) => {
         console.log('confirm delete');
         setShowModal(false);
         try {
-            await Axios.delete(`http://localhost:4000/api/slides/delete`,{data: {_id: props.slide._id}})
+            await Axios.delete(`http://localhost:4000/api/slides/delete`,{data: {_id: props.slide._id, image: props.slide.image}})
         } catch (error) {
             console.log(error);
         }
