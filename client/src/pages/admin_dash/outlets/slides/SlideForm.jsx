@@ -9,9 +9,7 @@ const Heading = styled.h5`
     padding: 20px 0 5px ;
     text-align: center;
 `;
-const Wrapper = styled.div.attrs((props) => ({
-    $backgroundimage: props.backgroundimage
-}))`
+const Wrapper = styled.div`
   position: relative;
   width: 100%;
   height: auto;
@@ -19,9 +17,8 @@ const Wrapper = styled.div.attrs((props) => ({
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: ${({ $backgroundimage }) =>
-    $backgroundimage
-      ? `url(${$backgroundimage}) right;`
+  background: ${props => props.$backgroundimage
+      ? `url(${props.$backgroundimage}) right;`
       : `linear-gradient(
           45deg,
           rgba(61, 61, 61, 0.15) 12.5%,
@@ -129,12 +126,15 @@ const SlideForm = (props) => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [link, setLink] = useState('');
+    const [image, setImage] = useState({});
 
     const [titleError, setTitleError] = useState([]);
     const [descriptionError, setDescriptionError] = useState([]);
     const [linkError, setLinkError] = useState([]);
 
     const [preview, setPreview] = useState(null);
+
+    // useEffect(() => {console.log(preview);},[preview])
 
     useEffect(() => {
 
@@ -160,12 +160,17 @@ const SlideForm = (props) => {
         setDescriptionError('');
         setLinkError('');
 
-        const image = './images/banner2.jpg';
         const order_no = props.slide_count + 1;
-        console.log(title, description, link, image, order_no);
+        const formData = new FormData();
+        formData.append('title', title);
+        formData.append('description', description);
+        formData.append('link', link);
+        formData.append('image', image);
+        formData.append('order_no', order_no);
+        console.log(formData);
         try {
             props.type === 'add' ?
-                await Axios.post('http://localhost:4000/api/slides/add', {title, description, link, image, order_no}) :
+                await Axios.post('http://localhost:4000/api/slides/add', formData, {headers: {'Content-Type': 'multipart/form-data'}}) :
                 await Axios.put('http://localhost:4000/api/slides/add', {title: title, description: description, link: link, image: image, order_no: order_no})
             props.onSubmit && props.onSubmit();
             props.setShowAddForm ? props.setShowAddForm(false) : props.setShowEditForm(false);
@@ -183,6 +188,7 @@ const SlideForm = (props) => {
     const handleFileChange = (file, previewUrl) => {
         // Handle file selection
         console.log(file);
+        setImage(file)
         setPreview(previewUrl);
       };
 
@@ -198,7 +204,7 @@ const SlideForm = (props) => {
     return (
         <>
             {props.type === 'add' ? <Heading>Pridėti naują skaidrę</Heading> : <Heading>Redaguoti skaidrės informaciją</Heading>}
-            <Wrapper backgroundimage={preview}>
+            <Wrapper $backgroundimage={preview}>
                 <TextInputsWrapper>
                     <div className="form-floating input-wrapper">
                         <input 
@@ -255,8 +261,8 @@ const SlideForm = (props) => {
                             readOnly
                             onFocus={handleFocus}
                             ref={linkRef}
-                            value={link.replace('/', '')}
-                            onChange={(e) => setLink("/" + e.target.value)}>
+                            value={link}
+                            onChange={(e) => setLink(e.target.value)}>
                         </input>
                         <label htmlFor="link_input_field">Puslapio nuorodos raktažodis</label>
                     </div>

@@ -71,7 +71,7 @@ const Admins = () => {
     const [admins, setAdmins] = useState([])
     const [showAddForm, setShowAddForm] = useState(false)
     const [showEditForm, setShowEditForm] = useState(false)
-    const [activeIndex, setActiveIndex] = useState(null)
+    // const [activeIndex, setActiveIndex] = useState(null)
     const [showModal, setShowModal] = useState(false)
     const [adminToDelete, setAdminToDelete] = useState(null)
     const [adminToEdit, setAdminToEdit] = useState(null)
@@ -85,10 +85,10 @@ const Admins = () => {
     }, [])
 
     const handleClickEdit = (event) => {
-        const index = event.target.closest('.parent').getAttribute('data-index');
+        // const index = event.target.closest('.parent').getAttribute('data-index');
         const name = event.target.closest('.parent').textContent;
         setShowEditForm(true)
-        setActiveIndex(index);
+        // setActiveIndex(index);
         setAdminToEdit(name)
     }
 
@@ -128,20 +128,21 @@ const Admins = () => {
             {showAddForm && <AdminForm type={'add'} setShowAddForm={setShowAddForm} onSubmit={getAdmins}/>}
             {showEditForm && <AdminForm type={'edit'} admin={adminToEdit} setShowEditForm={setShowEditForm} onSubmit={getAdmins}/>}
             {showModal && 
-            <ModalWrapper>
-                <div className="modal-dialog modal-dialog-centered">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h5 className="modal-title">Are you sure you want to remove {adminToDelete} from admins?</h5>
-                            <button type="button" className="btn-close" onClick={() => setShowModal(false)}></button>
-                        </div>
-                        <div className="modal-footer">
-                            <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>Cancel</button>
-                            <button type="button" className="btn btn-danger" onClick={handleDeleteConfirm}>Delete</button>
+                <ModalWrapper>
+                    <div className="modal-dialog modal-dialog-centered">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title">Are you sure you want to remove {adminToDelete} from admins?</h5>
+                                <button type="button" className="btn-close" onClick={() => setShowModal(false)}></button>
+                            </div>
+                            <div className="modal-footer">
+                                <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>Cancel</button>
+                                <button type="button" className="btn btn-danger" onClick={handleDeleteConfirm}>Delete</button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </ModalWrapper>}
+                </ModalWrapper>
+            }
         </Wrapper>
     )
 }

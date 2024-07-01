@@ -1,5 +1,6 @@
 const SlideModel = require('../models/carousel');
 const { validationResult } = require('express-validator');
+var fs = require('node:fs/promises');
 
 
 function validationErrorMessages(errors) {
@@ -31,14 +32,19 @@ module.exports = {
     },
 
     create: async (req, res) => {
-        console.log(req.body);
-        console.log('adding slide');
         const validation = validationResult(req);
         
         if (validation.isEmpty()) {
-            const { title, image, description, link, order_no } = req.body;
+            const { title, description, link, order_no } = req.body;
+            const linkUrl = `/${link}`;
+            console.log(req.body);
+            const imageUrl = req.file ? `./images/${req.file.originalname}`: null
             try {
-                const newSlide = await SlideModel.create({ title, image, description, link, order_no });
+                if (req.file) {
+                    const ext = {"image/webp": ".webp", "image/png": ".png", "image/jpeg": ".jpg"};
+                    await fs.rename(req.file.path, "public/images/" + req.file.originalname);
+                } 
+                const newSlide = await SlideModel.create({ title, image: imageUrl, description, link: linkUrl, order_no });
                 res.status(200).json(newSlide);
             } catch (error) {
                 res.status(400).json(error);
@@ -47,6 +53,15 @@ module.exports = {
         } else {
             const validation_err_messages = validationErrorMessages(validation.errors);
             res.status(400).json(validation_err_messages);
+        }
+    },
+    delete: async (req, res) => {
+        const { _id } = req.body;
+        try {
+            await SlideModel.deleteOne({ _id });
+            res.json({ message: 'Slide deleted' });
+        } catch (error) {
+            res.json({ message: error });
         }
     }
 }

@@ -35,31 +35,6 @@ const AddSlideButton = styled.div`
         color: var(--on-hover);
     }
 `;
-const Icon = styled.i`
-    cursor: pointer;
-    position: relative;
-    color: ${props => props.$delete ? 'red' : 'var(--light)'};
-    margin: 0 9px;
-    transition: 0.2s;
-    &:hover {
-        color: var(--on-hover);
-        &::after {
-            content: "${props => props.$delete ? 'Delete' : props.$add ? 'Add' : 'Edit'}";
-            display: block;
-            position: absolute;
-            bottom: -38px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: var(--light);
-            font-style: normal;
-            font-size: 0.8rem;
-            background-color: var(--dark);
-            padding: 3px 8px;
-            white-space: nowrap; /* Prevent the text from wrapping */
-            z-index: 1; /* Ensure the tooltip is above other elements */
-        }
-    }
-`;
 
 
 const Slides = () => {
@@ -85,7 +60,7 @@ const Slides = () => {
             <p style={{margin: '0'}}>Skaidrės:</p>
             <SlidesWrapper>
                 {slides.length > 0 && slides.map((slide, index) => (
-                    <Slide key={index} data-index={index} slide={slide}/>
+                    <Slide key={index} data_index={index} slide={slide} onDelete={getSlides}/>
                 ))}
             </SlidesWrapper>
             {showAddForm && <AddSlideForm setShowAddForm={setShowAddForm} type="add" slide_count={slides.length} onSubmit={getSlides}/>}

@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
+import Axios from 'axios';
 
 const Wrapper = styled.div`
     display: flex;
@@ -49,28 +50,68 @@ const Icon = styled.i`
         }
     }
 `;
+const ModalWrapper = styled.div`
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin:0;    
+`;
+
 
 
 // 
 const SlideCard = (props) => {
+
+    const [showModal, setShowModal] = useState(false);
     
     const capitalize = (str) => {
         return str.toUpperCase();
     }
-    const handleDelete = () => {
-        console.log('delete')       
+    const handleClickDelete = () => {
+        setShowModal(true) 
     };
-
+    const handleDeleteConfirm = async () => {
+        console.log('confirm delete');
+        setShowModal(false);
+        try {
+            await Axios.delete(`http://localhost:4000/api/slides/delete`,{data: {_id: props.slide._id}})
+        } catch (error) {
+            console.log(error);
+        }
+        props.onDelete()
+    };
     const handleClickEdit = () => {
         console.log('edit')
     }
 
     return (
-        <Wrapper key={props.index} data-index={props.index}>
+        <Wrapper key={props.index} data-index={props.index} >
             <p><b>{props.slide.order_no ? props.slide.order_no : props.index +1}</b></p>
             <p className='title'>{capitalize(props.slide.title)}</p>
             <Icon className="bi bi-pencil-fill" $edit onClick={handleClickEdit}></Icon>
-            <Icon className="bi bi-trash3-fill" $delete onClick={handleDelete}></Icon>
+            <Icon className="bi bi-trash3-fill" $delete onClick={handleClickDelete}></Icon>
+            {showModal && 
+                <ModalWrapper>
+                    <div className="modal-dialog modal-dialog-centered">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title">Ar tikrai norite ištrinti šią skaidrę ?</h5>
+                                <button type="button" className="btn-close" onClick={() => setShowModal(false)}></button>
+                            </div>
+                            <div className="modal-footer">
+                                <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>Atšaukti</button>
+                                <button type="button" className="btn btn-danger" onClick={handleDeleteConfirm}>Ištrinti</button>
+                            </div>
+                        </div>
+                    </div>
+                </ModalWrapper>
+            }
         </Wrapper>
     )
 }

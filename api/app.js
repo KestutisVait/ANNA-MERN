@@ -5,6 +5,7 @@ var logger = require('morgan');
 const cors = require('cors');
 const DbConnection = require('./db/conn');
 const DbInitialization = require('./db/init');
+const multer = require('multer');
 
 
 var indexRouter = require('./routes/index');
@@ -25,6 +26,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(multer({ dest: "uploads/" }).single("image"));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);

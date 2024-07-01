@@ -87,6 +87,7 @@ const FileInput = ({ onFileChange }) => {
       >
         <input
           type="file"
+          name="image"
           id="fileInput"
           accept=".png, .jpg, .jpeg"
           onChange={handleChange}
