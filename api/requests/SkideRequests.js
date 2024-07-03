@@ -12,7 +12,7 @@ module.exports = {
             .escape()
             .not().isEmpty().withMessage("Description is required")
             .isLength({ max: 200 }).withMessage("Description must be at most 200 characters long"),
-            body("link")
+        body("link")
             .trim()
             .escape()
             .not().isEmpty().withMessage("Link is required")

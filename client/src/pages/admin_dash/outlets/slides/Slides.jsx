@@ -41,6 +41,8 @@ const Slides = () => {
 
     const [slides, setSlides] = useState([]);
     const [showAddForm, setShowAddForm] = useState(false)
+    const [showEditForm, setShowEditForm] = useState(false)
+    const [slideToEdit, setSlideToEdit] = useState(null)
 
     const getSlides = async () => {
         const slides = await Axios.get('http://localhost:4000/api/slides')
@@ -60,10 +62,33 @@ const Slides = () => {
             <p style={{margin: '0'}}>Skaidrės:</p>
             <SlidesWrapper>
                 {slides.length > 0 && slides.map((slide, index) => (
-                    <Slide key={index} data_index={index} slide={slide} onDelete={getSlides}/>
+                    <Slide 
+                        key={index} 
+                        index={index} 
+                        slide={slide} 
+                        onDelete={getSlides}
+                        onEdit={setSlideToEdit} 
+                        setShowEditForm={setShowEditForm}
+                    />
                 ))}
             </SlidesWrapper>
-            {showAddForm && <AddSlideForm setShowAddForm={setShowAddForm} type="add" slide_count={slides.length} onSubmit={getSlides}/>}
+            {showAddForm && 
+                <AddSlideForm 
+                    setShowAddForm={setShowAddForm} 
+                    type="add" 
+                    slide_count={slides.length} 
+                    onSubmit={getSlides}
+                />
+            }
+            {showEditForm && 
+                <AddSlideForm 
+                    setShowEditForm={setShowEditForm} 
+                    type="edit" 
+                    slide_count={slides.length} 
+                    onSubmit={getSlides}
+                    slideToEdit={slideToEdit}
+                />
+            }
         </Wrapper>
     )
 }

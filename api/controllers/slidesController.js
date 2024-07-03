@@ -31,13 +31,21 @@ module.exports = {
             res.status(400).json('Something went wrong');
         }
     },
-
+    getSlide: async (req, res) => {
+        const { order_no } = req.query;
+        try {
+            const slide = await SlideModel.findOne({ order_no });
+            res.status(200).json(slide);
+        } catch (error) {
+            res.status(400).json(error);
+            res.status(400).json('Something went wrong');
+        }
+    },
     create: async (req, res) => {
         const validation = validationResult(req);
         
         if (validation.isEmpty()) {
             const { title, description, link, order_no } = req.body;
-            const linkUrl = `/${link}`;
             console.log(req.body);
             const imageUrl = req.file ? `images/${req.file.originalname}`: null
             try {
@@ -45,7 +53,31 @@ module.exports = {
                     const ext = {"image/webp": ".webp", "image/png": ".png", "image/jpeg": ".jpg"};
                     await fs.rename(req.file.path, "public/images/" + req.file.originalname);
                 } 
-                const newSlide = await SlideModel.create({ title, image: imageUrl, description, link: linkUrl, order_no });
+                const newSlide = await SlideModel.create({ title, image: imageUrl, description, link, order_no });
+                res.status(200).json(newSlide);
+            } catch (error) {
+                res.status(400).json(error);
+                console.log(error);
+            }
+        } else {
+            const validation_err_messages = validationErrorMessages(validation.errors);
+            res.status(400).json(validation_err_messages);
+        }
+    },
+    update: async (req, res) => {
+        const validation = validationResult(req);
+        if (validation.isEmpty()) {
+            const { title, description, link, order_no, image } = req.body;
+            const imageUrl = req.file ? `images/${req.file.originalname}` :  image ? image : null
+            console.log(req.body);
+            console.log(req.file);
+            console.log(imageUrl);
+            try {
+                if (req.file) {
+                    const ext = {"image/webp": ".webp", "image/png": ".png", "image/jpeg": ".jpg"};
+                    await fs.rename(req.file.path, "public/images/" + req.file.originalname);
+                } 
+                const newSlide = await SlideModel.updateOne({ order_no }, { title, image: imageUrl, description, link, order_no });
                 res.status(200).json(newSlide);
             } catch (error) {
                 res.status(400).json(error);

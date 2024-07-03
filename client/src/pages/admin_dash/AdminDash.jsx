@@ -7,10 +7,10 @@ import { AuthContext } from '../../Context';
 
 const Wrapper = styled.div`
     width: 100vw;
-    height: 100vh;
+    min-height: 100vh;
     display: grid;
     grid-template-columns: 20% 80%;
-    grid-template-rows: 10% 90%;
+    grid-template-rows: 10% 1fr;
     grid-template-areas: 
         "header header"
         "nav main"

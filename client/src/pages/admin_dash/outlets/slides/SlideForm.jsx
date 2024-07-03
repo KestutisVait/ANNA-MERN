@@ -137,17 +137,22 @@ const SlideForm = (props) => {
     // useEffect(() => {console.log(preview);},[preview])
 
     useEffect(() => {
-
-        const getAdmin = async () => {
+        
+        const getSlide = async () => {
             try {
-                const admin_in_db = await Axios.get('http://localhost:4000/api/slides/one', { params: {name: props.admin}});
-                setTitle(admin_in_db.data.name);  
-                setDescription(admin_in_db.data._id);             
+                const slide_in_db = await Axios.get('http://localhost:4000/api/slides/one', { params: {order_no: props.slideToEdit}});
+                console.log('slide in db', slide_in_db.data);
+                setTitle(slide_in_db.data.title);  
+                setDescription(slide_in_db.data.description);             
+                setLink(slide_in_db.data.link);
+                setImage(slide_in_db.data.image);   
+                setPreview('http://localhost:4000/' + slide_in_db.data.image);          
             } catch (error) {
                 console.log(error);
             }
         } 
-        if (props.type === 'edit') getAdmin();
+        // if (props.type === 'edit') console.log('geting slide info', props.slideToEdit);
+        if (props.type === 'edit') getSlide();
     },[])
 
     const handleFocus = (event) => {
@@ -159,7 +164,7 @@ const SlideForm = (props) => {
         setDescriptionError('');
         setLinkError('');
 
-        const order_no = props.slide_count + 1;
+        const order_no = props.type === 'add ' ? props.slide_count + 1 : props.slideToEdit;
         const formData = new FormData();
         formData.append('title', title);
         formData.append('description', description);
@@ -169,7 +174,7 @@ const SlideForm = (props) => {
         try {
             props.type === 'add' ?
                 await Axios.post('http://localhost:4000/api/slides/add', formData, {headers: {'Content-Type': 'multipart/form-data'}}) :
-                await Axios.put('http://localhost:4000/api/slides/add', {title: title, description: description, link: link, image: image, order_no: order_no})
+                await Axios.put('http://localhost:4000/api/slides/update', formData, {headers: {'Content-Type': 'multipart/form-data'}})
             props.onSubmit && props.onSubmit();
             props.setShowAddForm ? props.setShowAddForm(false) : props.setShowEditForm(false);
         } catch (error) {
@@ -196,6 +201,11 @@ const SlideForm = (props) => {
           }
         };
       }, [preview]);
+
+      const handleClearBg = () => {
+        setPreview(null);
+        props.type === 'edit' &&setImage(null);
+      };
     
 
     return (
@@ -268,7 +278,7 @@ const SlideForm = (props) => {
                 <CloseButton className="bi bi-x-circle-fill" onClick={handleClose}></CloseButton>
                 <Button type="submit" onClick={handleSubmit}>{props.type === 'edit' ? 'REDAGUOTI' : 'PRIDĖTI'}</Button>
                 <Dropzone onFileChange={handleFileChange}/>
-                <ClearBgButton onClick={() => setPreview(null)}>Išvalyti foną</ClearBgButton>
+                <ClearBgButton onClick={handleClearBg}>Išvalyti foną</ClearBgButton>
             </Wrapper>
         </>
     )

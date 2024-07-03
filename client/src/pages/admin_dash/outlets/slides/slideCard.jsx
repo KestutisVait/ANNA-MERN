@@ -79,7 +79,6 @@ const SlideCard = (props) => {
         setShowModal(true) 
     };
     const handleDeleteConfirm = async () => {
-        console.log('confirm delete');
         setShowModal(false);
         try {
             await Axios.delete(`http://localhost:4000/api/slides/delete`,{data: {_id: props.slide._id, image: props.slide.image}})
@@ -88,8 +87,10 @@ const SlideCard = (props) => {
         }
         props.onDelete()
     };
-    const handleClickEdit = () => {
-        console.log('edit')
+    const handleClickEdit = (e) => {
+        props.setShowEditForm(true);
+        const index = e.target.closest('[data-index]').dataset.index;
+        props.onEdit(parseInt(index) + 1)
     }
 
     return (
