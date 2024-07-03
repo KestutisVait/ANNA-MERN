@@ -141,7 +141,6 @@ const SlideForm = (props) => {
         const getSlide = async () => {
             try {
                 const slide_in_db = await Axios.get('http://localhost:4000/api/slides/one', { params: {order_no: props.slideToEdit}});
-                console.log('slide in db', slide_in_db.data);
                 setTitle(slide_in_db.data.title);  
                 setDescription(slide_in_db.data.description);             
                 setLink(slide_in_db.data.link);

@@ -3,18 +3,15 @@ import Axios from 'axios';
 import styled from 'styled-components';
 import Slide from './slideCard';
 import AddSlideForm from './SlideForm';
+import {DndContext} from '@dnd-kit/core';
+import {SortableContext, arrayMove} from '@dnd-kit/sortable';
+import {restrictToVerticalAxis} from '@dnd-kit/modifiers';
 
 const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: start;
     `;
-const SlidesWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-    border-top: 1px solid #c6cabd;
-    // margin: 15px 0;
-`;
 const AddSlideButton = styled.div`
     align-self: flex-end;
     width: fit-content;
@@ -48,9 +45,20 @@ const Slides = () => {
         const slides = await Axios.get('http://localhost:4000/api/slides')
         setSlides(slides.data);
     }
-    useEffect(() => {
-        getSlides()
-    }, [])
+    useEffect(() => { getSlides() }, []);
+    useEffect(() => { console.log(slides); }, [slides]);
+
+
+    const handleDragEnd = (event) => {
+        const {active, over} = event;
+        if (over && active.id !== over.id) {
+            setSlides((slides) => {
+                const oldIndex = slides.findIndex((slide) => slide.order_no === active.id);
+                const newIndex = slides.findIndex((slide) => slide.order_no === over.id);
+                return arrayMove(slides, oldIndex, newIndex);
+            })
+        }
+    };
 
     return (
         <Wrapper>
@@ -60,18 +68,24 @@ const Slides = () => {
                 <i className="bi bi-plus-circle" style={{margin: '0 0 0 9px '}}></i>
             </AddSlideButton>
             <p style={{margin: '0'}}>Skaidrės:</p>
-            <SlidesWrapper>
-                {slides.length > 0 && slides.map((slide, index) => (
-                    <Slide 
+            <DndContext
+                onDragEnd={(e) => handleDragEnd(e)} 
+                // onDragOver={(e) => handleDragEnd(e)} 
+                modifiers={[restrictToVerticalAxis]}   
+                >
+                <SortableContext items={slides.map((slide) => slide.order_no)}>
+                    {slides.length > 0 && slides.map((slide, index) => (
+                        <Slide 
                         key={index} 
                         index={index} 
                         slide={slide} 
-                        onDelete={getSlides}
                         onEdit={setSlideToEdit} 
+                        onDelete={getSlides}
                         setShowEditForm={setShowEditForm}
-                    />
-                ))}
-            </SlidesWrapper>
+                        />
+                    ))}
+                </SortableContext>
+            </DndContext>
             {showAddForm && 
                 <AddSlideForm 
                     setShowAddForm={setShowAddForm} 

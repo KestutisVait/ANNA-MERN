@@ -1,8 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import Axios from 'axios';
+import {useSortable} from '@dnd-kit/sortable';
+import {CSS} from '@dnd-kit/utilities';
 
 const Wrapper = styled.div`
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: start;
@@ -25,6 +28,7 @@ const Wrapper = styled.div`
     }
 `;
 const Icon = styled.i`
+    z-index: 1;
     justify-self: flex-end;
     cursor: pointer;
     position: relative;
@@ -62,20 +66,37 @@ const ModalWrapper = styled.div`
     align-items: center;
     margin:0;    
 `;
-
+const DragHandle = styled.div`
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 300px;
+    height: 100%;
+`;
 
 
 // 
 const SlideCard = (props) => {
 
+    const {
+        attributes,
+        listeners,
+        setNodeRef,
+        transform,
+        transition,
+      } = useSortable({id: props.slide.order_no});
 
+      const style = {
+        transform: CSS.Transform.toString(transform),
+        transition,
+      };
 
     const [showModal, setShowModal] = useState(false);
     
     const capitalize = (str) => {
         return str.toUpperCase();
     }
-    const handleClickDelete = () => {
+    const handleClickDelete = (e) => {
         setShowModal(true) 
     };
     const handleDeleteConfirm = async () => {
@@ -91,14 +112,28 @@ const SlideCard = (props) => {
         props.setShowEditForm(true);
         const index = e.target.closest('[data-index]').dataset.index;
         props.onEdit(parseInt(index) + 1)
-    }
+    };
+
 
     return (
-        <Wrapper key={props.index} data-index={props.index} >
-            <p><b>{props.slide.order_no ? props.slide.order_no : props.index +1}</b></p>
-            <p className='title'>{capitalize(props.slide.title)}</p>
-            <Icon className="bi bi-pencil-fill" $edit onClick={handleClickEdit}></Icon>
-            <Icon className="bi bi-trash3-fill" $delete onClick={handleClickDelete}></Icon>
+        <Wrapper 
+            data-index={props.index} 
+            ref={setNodeRef}
+            {...attributes}
+            style={style}
+            >
+            <DragHandle {...listeners}/>
+            <p className='title' >{capitalize(props.slide.title)}</p>
+            <Icon
+                className="bi bi-pencil-fill"
+                $edit
+                onClick={handleClickEdit}
+            />
+            <Icon
+                className="bi bi-trash3-fill"
+                $delete
+                onClick={handleClickDelete}
+            />
             {showModal && 
                 <ModalWrapper>
                     <div className="modal-dialog modal-dialog-centered">
