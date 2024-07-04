@@ -68,13 +68,21 @@ function App() {
     );
     function handleDragEnd(event) {
         const {active, over} = event;
+        let slidesCopy = [];
       
         if (active.id !== over.id) {
             setSlides((slides) => {
                 const oldIndex = slides.findIndex(slide => slide.id === active.id);
                 const newIndex = slides.findIndex(slide => slide.id === over.id);
+                slidesCopy = arrayMove(slides, oldIndex, newIndex);
                 return arrayMove(slides, oldIndex, newIndex);
             });
+            const payload_to_reorder= [
+                { _id: slidesCopy[0]._id, title: slidesCopy[0].title, order_no: 1 },
+                { _id: slidesCopy[1]._id, title: slidesCopy[1].title, order_no: 2 },
+                { _id: slidesCopy[2]._id, title: slidesCopy[2].title, order_no: 3 },
+            ]
+            Axios.put('http://localhost:4000/api/slides/reorder', payload_to_reorder)  
         }
     }
     

@@ -2,7 +2,7 @@ const SlideModel = require('../models/carousel');
 const { validationResult } = require('express-validator');
 var fs = require('node:fs/promises');
 const path = require('path');
-
+const mongoose = require('mongoose');
 
 function validationErrorMessages(errors) {
     const validation_err_messages = {}
@@ -24,12 +24,19 @@ module.exports = {
     getSlides: async (req, res) => {
         try {
             const slides = await SlideModel.find();
+            const sortedSlides = slides.sort((a, b) => a.order_no - b.order_no);
             const new_slides_array = []
-            for (let i = 0; i < slides.length; i++) {
-                new_slides_array.push({id: i+1, title: slides[i].title, description: slides[i].description, link: slides[i].link, order_no: slides[i].order_no})
+            for (let i = 0; i < sortedSlides.length; i++) {
+                new_slides_array.push({
+                    id: i+1, 
+                    title: sortedSlides[i].title, 
+                    description: sortedSlides[i].description, 
+                    link: sortedSlides[i].link, 
+                    order_no: sortedSlides[i].order_no,
+                    image: sortedSlides[i].image,
+                    _id: sortedSlides[i]._id
+                })
             }
-            console.log(new_slides_array);
-    
             res.status(200).json(new_slides_array);
             
         } catch (error) {
@@ -103,6 +110,16 @@ module.exports = {
 
         } catch (error) {
             res.json({ message: error });
+        }
+    },
+    reorder: async (req, res) => {
+        const slides_array = req.body;
+        try {
+            for (let slide of slides_array) {
+                await SlideModel.updateOne({ _id: slide._id }, {order_no: slide.order_no });
+            };
+        } catch (error) {
+            console.log(error);
         }
     }
 }
