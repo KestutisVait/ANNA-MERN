@@ -114,6 +114,7 @@ module.exports = {
     },
     reorder: async (req, res) => {
         const slides_array = req.body;
+        
         try {
             for (let slide of slides_array) {
                 await SlideModel.updateOne({ _id: slide._id }, {order_no: slide.order_no });

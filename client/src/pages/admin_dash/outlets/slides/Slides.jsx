@@ -78,10 +78,8 @@ function App() {
                 return arrayMove(slides, oldIndex, newIndex);
             });
             const payload_to_reorder= [];
-            for ( let i = 0; i < slidesCopy.length; i++ ) {
-                console.log(slidesCopy[i]._id);
-                payload_to_reorder.push({ _id: slidesCopy[i]._id, title: slidesCopy[i].title, order_no: i + 1 });
-
+            for (let i = 0; i < slidesCopy.length; i++) {
+                payload_to_reorder.push({ _id: slidesCopy[i]._id, title: slidesCopy[i].title, order_no: i+1 })
             }
             Axios.put('http://localhost:4000/api/slides/reorder', payload_to_reorder)  
         }
