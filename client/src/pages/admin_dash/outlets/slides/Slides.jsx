@@ -3,7 +3,7 @@ import Axios from 'axios';
 import styled from 'styled-components';
 import Slide from './slideCard';
 import AddSlideForm from './SlideForm';
-import {DndContext} from '@dnd-kit/core';
+import {DndContext, closestCenter} from '@dnd-kit/core';
 import {SortableContext, arrayMove} from '@dnd-kit/sortable';
 import {restrictToVerticalAxis} from '@dnd-kit/modifiers';
 
@@ -46,7 +46,7 @@ const Slides = () => {
         setSlides(slides.data);
     }
     useEffect(() => { getSlides() }, []);
-    useEffect(() => { console.log(slides); }, [slides]);
+    // useEffect(() => { console.log(slides); }, [slides]);
 
 
     const handleDragEnd = (event) => {
@@ -69,7 +69,8 @@ const Slides = () => {
             </AddSlideButton>
             <p style={{margin: '0'}}>Skaidrės:</p>
             <DndContext
-                onDragEnd={(e) => handleDragEnd(e)} 
+                onDragEnd={handleDragEnd} 
+                collisionDetection={closestCenter}
                 // onDragOver={(e) => handleDragEnd(e)} 
                 modifiers={[restrictToVerticalAxis]}   
                 >
