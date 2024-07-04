@@ -57,7 +57,8 @@ const Icon = styled.i`
 const ModalWrapper = styled.div`
     width: 100vw;
     height: 100vh;
-    position: absolute;
+    position: fixed;
+    z-index: 2;
     top: 0;
     left: 0;
     background-color: rgba(0, 0, 0, 0.5);
@@ -110,8 +111,8 @@ const SlideCard = (props) => {
     };
     const handleClickEdit = (e) => {
         props.setShowEditForm(true);
-        const index = e.target.closest('[data-index]').dataset.index;
-        props.onEdit(parseInt(index) + 1)
+        // const index = e.target.closest('[data-index]').dataset.index;
+        props.onEdit(props.slide.id)
     };
 
 

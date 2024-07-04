@@ -1,17 +1,29 @@
-import React, { useEffect, useState } from 'react';
-import Axios from 'axios';
+import React, {useState, useEffect} from 'react';
 import styled from 'styled-components';
+import Axios from 'axios';
+import {
+    DndContext, 
+    closestCenter,
+    KeyboardSensor,
+    PointerSensor,
+    useSensor,
+    useSensors,
+} from '@dnd-kit/core';
+import {
+    arrayMove,
+    SortableContext,
+    sortableKeyboardCoordinates,
+    verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import {restrictToVerticalAxis} from '@dnd-kit/modifiers';
 import Slide from './slideCard';
 import AddSlideForm from './SlideForm';
-import {DndContext, closestCenter} from '@dnd-kit/core';
-import {SortableContext, arrayMove} from '@dnd-kit/sortable';
-import {restrictToVerticalAxis} from '@dnd-kit/modifiers';
 
 const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: start;
-    `;
+`;
 const AddSlideButton = styled.div`
     align-self: flex-end;
     width: fit-content;
@@ -33,9 +45,7 @@ const AddSlideButton = styled.div`
     }
 `;
 
-
-const Slides = () => {
-
+function App() {
     const [slides, setSlides] = useState([]);
     const [showAddForm, setShowAddForm] = useState(false)
     const [showEditForm, setShowEditForm] = useState(false)
@@ -46,20 +56,28 @@ const Slides = () => {
         setSlides(slides.data);
     }
     useEffect(() => { getSlides() }, []);
-    // useEffect(() => { console.log(slides); }, [slides]);
+    // useEffect(() => { 
+    //     console.log(slides) 
+    // }, [ slides ]);
 
-
-    const handleDragEnd = (event) => {
+    const sensors = useSensors(     
+        useSensor(PointerSensor),
+        useSensor(KeyboardSensor, {
+            coordinateGetter: sortableKeyboardCoordinates,
+        })
+    );
+    function handleDragEnd(event) {
         const {active, over} = event;
-        if (over && active.id !== over.id) {
+      
+        if (active.id !== over.id) {
             setSlides((slides) => {
-                const oldIndex = slides.findIndex((slide) => slide.order_no === active.id);
-                const newIndex = slides.findIndex((slide) => slide.order_no === over.id);
+                const oldIndex = slides.findIndex(slide => slide.id === active.id);
+                const newIndex = slides.findIndex(slide => slide.id === over.id);
                 return arrayMove(slides, oldIndex, newIndex);
-            })
+            });
         }
-    };
-
+    }
+    
     return (
         <Wrapper>
             <h5>Here you can add, delete or edit slides info and order</h5>
@@ -68,23 +86,25 @@ const Slides = () => {
                 <i className="bi bi-plus-circle" style={{margin: '0 0 0 9px '}}></i>
             </AddSlideButton>
             <p style={{margin: '0'}}>Skaidrės:</p>
-            <DndContext
-                onDragEnd={handleDragEnd} 
+            <DndContext 
+                sensors={sensors}
                 collisionDetection={closestCenter}
-                // onDragOver={(e) => handleDragEnd(e)} 
-                modifiers={[restrictToVerticalAxis]}   
+                onDragEnd={handleDragEnd}
+                modifiers={[restrictToVerticalAxis]}
+            >
+                <SortableContext 
+                    items={slides}
+                    strategy={verticalListSortingStrategy}
                 >
-                <SortableContext items={slides.map((slide) => slide.order_no)}>
-                    {slides.length > 0 && slides.map((slide, index) => (
+                    {slides.length > 0 && slides.map(slide=> 
                         <Slide 
-                        key={index} 
-                        index={index} 
-                        slide={slide} 
-                        onEdit={setSlideToEdit} 
-                        onDelete={getSlides}
-                        setShowEditForm={setShowEditForm}
+                            key={slide.id} 
+                            id={slide.id} 
+                            slide={slide}
+                            setShowEditForm={setShowEditForm}
+                            onEdit={setSlideToEdit}
                         />
-                    ))}
+                    )}
                 </SortableContext>
             </DndContext>
             {showAddForm && 
@@ -105,7 +125,7 @@ const Slides = () => {
                 />
             }
         </Wrapper>
-    )
+    );
 }
 
-export default Slides
+export default App

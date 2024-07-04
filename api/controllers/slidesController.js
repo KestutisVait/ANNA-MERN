@@ -24,7 +24,13 @@ module.exports = {
     getSlides: async (req, res) => {
         try {
             const slides = await SlideModel.find();
-            res.status(200).json(slides);
+            const new_slides_array = []
+            for (let i = 0; i < slides.length; i++) {
+                new_slides_array.push({id: i+1, title: slides[i].title, description: slides[i].description, link: slides[i].link, order_no: slides[i].order_no})
+            }
+            console.log(new_slides_array);
+    
+            res.status(200).json(new_slides_array);
             
         } catch (error) {
             res.status(400).json(error);
