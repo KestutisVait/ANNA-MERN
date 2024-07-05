@@ -120,7 +120,7 @@ module.exports = {
                 await SlideModel.updateOne({ _id: slide._id }, {order_no: slide.order_no });
             };
         } catch (error) {
-            console.log(error);
+            console.log('Error reordering slides:', error);
         }
     }
 }

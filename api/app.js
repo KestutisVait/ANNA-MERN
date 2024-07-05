@@ -13,6 +13,7 @@ var usersRouter = require('./routes/users');
 var adminRouter = require('./routes/admin');
 var navigationRouter = require('./routes/navigation');
 var slidesRouter = require('./routes/slides');
+var articleRouter = require('./routes/article');
 
 var app = express();
 
@@ -36,6 +37,7 @@ app.use('/users', usersRouter);
 app.use('/api/admin', adminRouter);
 app.use('/api/nav', navigationRouter);
 app.use('/api/slides', slidesRouter);
+app.use('/api/articles', articleRouter);
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
