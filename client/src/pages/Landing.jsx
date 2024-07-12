@@ -7,7 +7,7 @@ const Landing = () => {
     return (
         <div>
             <Carousel />
-            <Article number={2}/>
+            <Article number={1}/>
         </div>
     )
 }

@@ -18,6 +18,16 @@ const Wrapper = styled.div`
         margin: 0;
     }
 `;
+const TextInputsWrapper = styled.div`
+    display: flex;
+    padding: 0 0 1rem;
+    margin-top: 1rem;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+`;
+
 const CloseButton = styled.i`
     position: absolute;
     top: 0;
@@ -86,11 +96,6 @@ const ArticleEditForm = (props) => {
         }
     };
 
-
-    
-
-
-
     return (
         <Wrapper>
             <CloseButton 
@@ -98,35 +103,37 @@ const ArticleEditForm = (props) => {
                 onClick={() => props.setShowEditForm(false)}>
             </CloseButton>
             <h4>Redaguoti straipsnį</h4>
-            <TextInput
-                label="Antraštė"
-                name="title"
-                value={handleValueChange}
-                inputValue={title}
-                validationErrors={titleError}
-            />
-            <TextArea
-                label="Trumpas aprašymas"
-                name="summary"
-                value={handleValueChange}
-                inputValue={summary}
-                maxLength={200}
-                validationErrors={summaryError}
-            />
-            <TextArea
-                label="Pilnas straipsnio textas"
-                name="content"
-                value={handleValueChange}
-                inputValue={content}
-                validationErrors={contentError}
-            />
-            <TextInput
-                label="Nuoroda"
-                name="link"
-                value={handleValueChange}
-                inputValue={link}
-                validationErrors={linkError}
-            />
+            <TextInputsWrapper>
+                <TextInput
+                    label="Antraštė"
+                    name="title"
+                    value={handleValueChange}
+                    inputValue={title}
+                    validationErrors={titleError}
+                />
+                <TextArea
+                    label="Trumpas aprašymas"
+                    name="summary"
+                    value={handleValueChange}
+                    inputValue={summary}
+                    maxLength={200}
+                    validationErrors={summaryError}
+                />
+                <TextArea
+                    label="Pilnas straipsnio textas"
+                    name="content"
+                    value={handleValueChange}
+                    inputValue={content}
+                    validationErrors={contentError}
+                />
+                <TextInput
+                    label="Nuoroda"
+                    name="link"
+                    value={handleValueChange}
+                    inputValue={link}
+                    validationErrors={linkError}
+                />
+            </TextInputsWrapper>
             <Button type="submit" onClick={handleSubmit}>REDAGUOTI</Button>
         </Wrapper>
     )

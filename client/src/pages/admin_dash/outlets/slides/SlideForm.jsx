@@ -1,7 +1,9 @@
-import React , { useState, useRef, useEffect } from 'react';
+import React , { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Axios from 'axios';
 import Dropzone from './dropzone'
+import TextInput from '../../../../components/inputs/text';
+import TextArea from '../../../../components/inputs/textArea';
 
 const Heading = styled.h5`
     color: var(--dark);
@@ -50,25 +52,6 @@ const TextInputsWrapper = styled.div`
     align-items: center;
     width:61.5%;
     background-color: white;
-    .input-wrapper {
-        border-bottom: 1px solid black;
-        width: 80%;
-        display: flex;
-    }
-    input, textarea {
-        border: none;
-        background-color: white;
-        &:focus {
-           box-shadow: none;
-        }
-        &[readOnly] {
-            background-color: white;
-        }
-    }
-    i { 
-        padding: 1rem 0;
-        cursor: pointer; 
-    }
 `;
 const Button = styled.button`
     padding: 0.5rem 2rem; 
@@ -106,22 +89,10 @@ const ClearBgButton = styled.button`
     border: none;
     transition: 0.2s;
     &:hover {
-        // color: var(--on-hover);
         background-color:  rgba(61, 61, 61, 0.8);
-`;
-const Error = styled.div`
-    color: red;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
 `;
 
 const SlideForm = (props) => {
-
-    const titleRef = useRef(null);
-    const descriptionRef = useRef(null);
-    const linkRef = useRef(null);
 
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
@@ -150,13 +121,11 @@ const SlideForm = (props) => {
                 console.log(error);
             }
         } 
-        // if (props.type === 'edit') console.log('geting slide info', props.slideToEdit);
         if (props.type === 'edit') getSlide();
     },[])
 
-    const handleFocus = (event) => {
-        event.target.removeAttribute('readOnly');
-    };
+
+
     const handleSubmit = async (event) => {
         event.preventDefault();
         setTitleError('');
@@ -187,6 +156,12 @@ const SlideForm = (props) => {
     const handleClose = () => {
         props.setShowAddForm ? props.setShowAddForm(false) : props.setShowEditForm(false);
     };
+    const handleValueChange = (value, name) => {
+        if (name === 'title') setTitle(value);
+        else if (name === 'description') setDescription(value);
+        else if (name === 'link') setLink(value);
+        else setLink(value);
+    };
     const handleFileChange = (file, previewUrl) => {
         // console.log(file);
         setImage(file)
@@ -212,67 +187,25 @@ const SlideForm = (props) => {
             {props.type === 'add' ? <Heading>Pridėti naują skaidrę</Heading> : <Heading>Redaguoti skaidrės informaciją</Heading>}
             <Wrapper $backgroundimage={preview}>
                 <TextInputsWrapper>
-                    <div className="form-floating input-wrapper">
-                        <input 
-                            type="text" 
-                            className="form-control" 
-                            id="title_input_field" 
-                            placeholder="Title"
-                            autoComplete='off'
-                            spellCheck='false'
-                            autoCorrect='off'
-                            name='title'
-                            required
-                            readOnly
-                            onFocus={handleFocus}
-                            ref={titleRef}
-                            value={title}
-                            onChange={(e) => setTitle(e.target.value)}>
-                        </input>
-                        <label htmlFor="title_input_field">Antraštė</label>
-                    </div>
-                    {titleError.length > 0 && titleError.map((error, index) => <Error key={index}>{error}</Error>)}
-                    <div className="form-floating input-wrapper">
-                        <textarea 
-                            className="form-control" 
-                            style={{height: "9rem", maxHeight: "9rem", minHeight: "9rem"}}
-                            maxLength={200}
-                            id="description_input_field" 
-                            placeholder="Description"
-                            autoComplete='off'
-                            spellCheck='false'
-                            autoCorrect='off'
-                            name='description'
-                            required
-                            readOnly
-                            onFocus={handleFocus}
-                            ref={descriptionRef}
-                            value={description}
-                            onChange={(e) => setDescription(e.target.value)}>
-                        </textarea>
-                        <label htmlFor="description_input_field">Trumpas aprašymas</label>
-                    </div>
-                    {descriptionError.length > 0 && descriptionError.map((error, index) => <Error key={index}>{error}</Error>)}
-                    <div className="form-floating input-wrapper">
-                        <input 
-                            type="text" 
-                            className="form-control" 
-                            id="link_input_field" 
-                            placeholder="Title"
-                            autoComplete='off'
-                            spellCheck='false'
-                            autoCorrect='off'
-                            name='link'
-                            required
-                            readOnly
-                            onFocus={handleFocus}
-                            ref={linkRef}
-                            value={link}
-                            onChange={(e) => setLink(e.target.value)}>
-                        </input>
-                        <label htmlFor="link_input_field">Puslapio nuorodos raktažodis</label>
-                    </div>
-                    {linkError.length > 0 && linkError.map((error, index) => <Error key={index}>{error}</Error>)}
+                    <TextInput
+                         label="Antraštė"
+                         name="title"
+                         value={handleValueChange}
+                         inputValue={title}
+                         validationErrors={titleError}/>
+                    <TextArea 
+                        label="Trumpas aprašymas"
+                        name="description"
+                        value={handleValueChange}
+                        inputValue={description}
+                        validationErrors={descriptionError}
+                        />
+                    <TextInput
+                         label="Puslapio nuorodos raktažodis"
+                         name="link"
+                         value={handleValueChange}
+                         inputValue={link}
+                         validationErrors={linkError}/>
                 </TextInputsWrapper>
                 <CloseButton className="bi bi-x-circle-fill" onClick={handleClose}></CloseButton>
                 <Button type="submit" onClick={handleSubmit}>{props.type === 'edit' ? 'REDAGUOTI' : 'PRIDĖTI'}</Button>

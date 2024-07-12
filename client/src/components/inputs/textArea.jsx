@@ -1,20 +1,13 @@
 import styled from 'styled-components';
 
-const TextInputsWrapper = styled.div`
+const Wrapper = styled.div`
     display: flex;
-    padding: 0 0 1rem;
-    margin-top: 1rem;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
-    // width:61.5%;
+    border-bottom: 1px solid black;
     background-color: white;
-    .input-wrapper {
-        border-bottom: 1px solid black;
-        width: 80%;
-
-        display: flex;
-    }
+    width: 80%;
+    display: flex;
     input, textarea {
         border: none;
         background-color: white;
@@ -24,10 +17,6 @@ const TextInputsWrapper = styled.div`
         &[readOnly] {
             background-color: white;
         }
-    }
-    i { 
-        padding: 1rem 0;
-        cursor: pointer; 
     }
 `;
 const Error = styled.div`
@@ -47,8 +36,8 @@ const TextInput = (props) => {
         props.value(event.target.value, event.target.name);
     }
     return (
-        <TextInputsWrapper>
-            <div className="form-floating input-wrapper">
+        <>
+            <Wrapper className="form-floating input-wrapper">
                 <textarea 
                     className="form-control" 
                     style={{height: "9rem", minHeight: "9rem"}}
@@ -66,10 +55,10 @@ const TextInput = (props) => {
                     onChange={handleValueChange}>
                 </textarea>
                 <label htmlFor="description_input_field">{props.label}</label>
-            </div>
+            </Wrapper>
             {props.validationErrors && props.validationErrors.map((error, index) => <Error key={index}>{error}</Error>)}
 
-        </TextInputsWrapper>
+        </>
     )
 }
 
