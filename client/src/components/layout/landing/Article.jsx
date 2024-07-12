@@ -50,7 +50,6 @@ const Button = styled.div`
     }
 `;
 
-
 const Article = (props) => {
 
     const [article, setArticle] = useState({});
@@ -60,7 +59,6 @@ const Article = (props) => {
         const getArticle = async () => {
             try {
                 const article = await Axios.get(`http://localhost:4000/api/articles/one`, {params: {number: props.number}});
-                console.log(article.data);
                 setArticle(article.data);
             } catch (error) {
                 console.log(error);

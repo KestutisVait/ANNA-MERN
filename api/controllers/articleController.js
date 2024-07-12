@@ -53,4 +53,24 @@ module.exports = {
         }
     },
 
+    update: async (req, res) => {
+        const validation = validationResult(req);
+        if (validation.isEmpty()) {
+            const { title, summary, content } = req.body;
+            console.log(req.body);
+            const linkUrl = !req.body.link ? '/home' : `/${req.body.link}`
+            try {
+                const newArticle = await ArticleModel.updateOne({ number: req.body.number }, { title, summary, content, link: linkUrl });
+                console.log('updated article');
+                res.status(200).json(newArticle);
+            } catch (error) {
+                res.status(400).json(error);
+                console.log(error);
+            }
+        } else {
+            const validation_err_messages = validationErrorMessages(validation.errors);
+            res.status(400).json(validation_err_messages);
+        }
+    },
+
 };

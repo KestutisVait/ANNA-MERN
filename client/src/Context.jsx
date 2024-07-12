@@ -1,6 +1,7 @@
 import { createContext, useState } from "react";
 
 const AuthContext = createContext();
+const ArticleContext = createContext();
 
 const AuthContextProvider = ({ children }) => {
 
@@ -14,4 +15,15 @@ const AuthContextProvider = ({ children }) => {
     )
 };
 
-export { AuthContext, AuthContextProvider }
+const ArticleContextProvider = ({ children }) => {
+
+    const [articles, setArticles] = useState([]);
+
+    return (
+        <ArticleContext.Provider value={{ articles, setArticles }}>
+            {children}
+        </ArticleContext.Provider>
+    )
+};
+
+export { AuthContext, AuthContextProvider, ArticleContext, ArticleContextProvider }

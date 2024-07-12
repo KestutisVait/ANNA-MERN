@@ -2,7 +2,7 @@ import React, { useEffect, useContext } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import Axios from 'axios';
-import { AuthContext } from '../../Context';
+import { ArticleContextProvider, AuthContext } from '../../Context';
 
 
 const Wrapper = styled.div`
@@ -109,9 +109,12 @@ const AdminDash = () => {
                 <div onClick={() => navigate('/admin')}>Administracija</div>
                 {/* <div onClick={() => navigate('/admin/nav')}>Navigacija</div> */}
                 <div onClick={() => navigate('/admin/carousel')}>Skaidrės</div>
+                <div onClick={() => navigate('/admin/article')}>Straipsniai</div>
             </Nav>
             <Main >
-                <Outlet />
+                <ArticleContextProvider>
+                    <Outlet />
+                </ArticleContextProvider>
             </Main>
         </Wrapper>
     )
