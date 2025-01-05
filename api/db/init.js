@@ -1,4 +1,4 @@
-const AdminModel = require('../models/admin');
+const AdminModel = require('../models/admin')
 const NavModel = require('../models/navigation');
 const bcryptjs = require('bcryptjs');
 require('dotenv').config();
@@ -15,7 +15,7 @@ const initialize = async () => {
     const navs = [
         { title: 'Pradžia', link: '/', order_no: 1 },
         { title: 'Apie', link: '/about', order_no: 2 },
-        { title: 'Produktai', link: '/products', order_no: 2 }
+        // { title: 'Produktai', link: '/products', order_no: 2 }
     ];
     for (let n of navs) {
         const nav_in_db = await NavModel.findOne({ title: n.title })
