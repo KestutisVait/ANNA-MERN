@@ -110,6 +110,7 @@ const AdminDash = () => {
                 {/* <div onClick={() => navigate('/admin/nav')}>Navigacija</div> */}
                 <div onClick={() => navigate('/admin/carousel')}>Skaidrės</div>
                 <div onClick={() => navigate('/admin/article')}>Straipsniai</div>
+                <div onClick={() => navigate('/admin/events')}>Renginiai</div>
             </Nav>
             <Main >
                 <ArticleContextProvider>

@@ -59,7 +59,7 @@ module.exports = {
         
         if (validation.isEmpty()) {
             const { title, description, link, order_no } = req.body;
-            console.log(req.body);
+            // console.log(req.body);
             const imageUrl = req.file ? `images/${req.file.originalname}`: null
             try {
                 if (req.file) {

@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 require('dotenv').config();
 
-const dbUrl = 'mongodb://localhost:27017/anna';
+const dbUrl = 'mongodb+srv://Kestutis:gva55qKfz079cpL8@anna.er7idep.mongodb.net/?retryWrites=true&w=majority&appName=ANNA';
+// const dbUrl = 'mongodb://localhost:27017/anna';
 
 // const dbUrl_template = process.env.DB_URL;
 // const dbUrl = dbUrl_template

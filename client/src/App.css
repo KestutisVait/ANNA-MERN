@@ -10,6 +10,7 @@
     font-family: 'Wix Madefor Text', sans-serif;
   }
   .soc-media-bar {
+    /* background-color: #8C52FF; */
     background-color: var(--dark);
     color: white;
   }

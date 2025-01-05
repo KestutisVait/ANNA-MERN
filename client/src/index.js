@@ -9,6 +9,7 @@ import Admins from './pages/admin_dash/outlets/admins/Admins';
 import Navigation from './pages/admin_dash/outlets/Navigation';
 import Carousel from './pages/admin_dash/outlets/slides/Slides';
 import Articles from './pages/admin_dash/outlets/articles/Articles';
+import Events from './pages/admin_dash/outlets/events/Events';
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -29,6 +30,8 @@ const router = createBrowserRouter(
         <Route path="/admin/nav" element={<Navigation />} />
         <Route path="/admin/carousel" element={<Carousel />} />
         <Route path="/admin/article" element={<Articles />} />
+        <Route path="/admin/events" element={<Events />} />
+        
       </Route>
       <Route path="/login" element={<Login />} />
     </>
