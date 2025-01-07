@@ -11,7 +11,8 @@ const Header = () => {
 
     useEffect(() => {
         const getNavItems = async () => {
-            const items = await Axios.get('http://localhost:4000/api/nav')
+            const items = await Axios.get('https://anna-backend-laxp.onrender.com/api/nav')
+            // const items = await Axios.get('http://localhost:4000/api/nav')
             console.log(items.data);
             
             // const items = await Axios.get('./data/nav_items.json')

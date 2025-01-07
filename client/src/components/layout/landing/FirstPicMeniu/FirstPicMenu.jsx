@@ -26,7 +26,8 @@ const PicMenu = () => {
     
     useEffect(() => {
         const getItems = async () => {
-            const events = await Axios.get('http://localhost:4000/api/events');
+            const events = await Axios.get('https://anna-backend-laxp.onrender.com/api/events');
+            // const events = await Axios.get('http://localhost:4000/api/events');
             console.log(events.data);
             setItems(events.data);
         }

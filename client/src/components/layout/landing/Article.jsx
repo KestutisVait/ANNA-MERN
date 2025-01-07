@@ -58,7 +58,8 @@ const Article = (props) => {
 
         const getArticle = async () => {
             try {
-                const article = await Axios.get(`http://localhost:4000/api/articles/one`, {params: {number: props.number}});
+                const article = await Axios.get(`https://anna-backend-laxp.onrender.com/api/articles/one`, {params: {number: props.number}});
+                // const article = await Axios.get(`http://localhost:4000/api/articles/one`, {params: {number: props.number}});
                 setArticle(article.data);
             } catch (error) {
                 console.log(error);
