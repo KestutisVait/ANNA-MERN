@@ -34,18 +34,21 @@ const Carousel = () => {
 
 
     useEffect(() => {
-    const carousel = document.querySelector('#carouselExample');
-    if (carousel) {
-      // Initialize the Bootstrap carousel
-      new window.bootstrap.Carousel(carousel, {
-        interval: 10000, // 10 seconds
-        wrap: true,     // Enable wrapping
-        touch: true,    // Enable touch gestures for mobile
-      });
-    } else {
-      console.error('Carousel element not found');
-    }
-  }, []);
+        if (slides.length > 0) {
+            const carousel = document.querySelector('#carouselExampleIndicators');
+            if (carousel) {
+                // Initialize the Bootstrap carousel
+                new window.bootstrap.Carousel(carousel, {
+                    interval: 10000, // 10 seconds
+                    wrap: true,      // Enable wrapping
+                    touch: true,     // Enable touch gestures for mobile
+                });
+            } else {
+                console.error('Carousel element not found');
+            }
+        }
+    }, [slides]);
+    
     return (
         <CarousellWrapper>
             <div id="carouselExampleIndicators" className="carousel carousel-dark slide" data-bs-ride="carousel">
