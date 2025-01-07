@@ -59,7 +59,8 @@ const Button = styled.div`
 
 const Slide = (props) => {
 
-    const image = `http://localhost:4000/${props.data.image}`;
+    const image = `https://anna-backend-laxp.onrender.com/${props.data.image}`;
+    // const image = `http://localhost:4000/${props.data.image}`;
     // const navigate = useNavigate();
 
     const capitalize = (str) => {
