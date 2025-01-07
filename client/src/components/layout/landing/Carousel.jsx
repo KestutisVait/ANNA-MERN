@@ -25,7 +25,8 @@ const Carousel = () => {
 
     useEffect(() => {
         const getSlides = async () => {
-            const slides = await Axios.get('http://localhost:4000/api/slides');
+            const slides = await Axios.get('https://anna-backend-laxp.onrender.com/api/slides');
+            // const slides = await Axios.get('http://localhost:4000/api/slides');
             setSlides(slides.data);
         }
 
